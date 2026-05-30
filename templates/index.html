@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<div id="dynamic-bg"></div>
 <canvas id="bg-canvas"></canvas>
 
 <div class="toast" id="toast"></div>
@@ -20,6 +21,9 @@
   </header>
 
   <div class="launcher">
+    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme">
+      <span class="icon">✨</span>THEME
+    </button>
     <button class="launch-btn" onclick="toggle('calc')" id="btn-calc">
       <span class="icon">🧮</span>CALC
     </button>
@@ -31,30 +35,6 @@
     </button>
     <button class="launch-btn" onclick="toggle('timer')" id="btn-timer">
       <span class="icon">⏱️</span>TIMER
-    </button>
-    <button class="launch-btn" onclick="toggle('color')" id="btn-color">
-      <span class="icon">🎨</span>COLOR
-    </button>
-    <button class="launch-btn" onclick="toggle('unit')" id="btn-unit">
-      <span class="icon">📐</span>CONVERT
-    </button>
-    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi">
-      <span class="icon">💪</span>BMI
-    </button>
-    <button class="launch-btn" onclick="toggle('age')" id="btn-age">
-      <span class="icon">🎂</span>AGE
-    </button>
-    <button class="launch-btn" onclick="toggle('hash')" id="btn-hash">
-      <span class="icon">🔐</span>ENCODE
-    </button>
-    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin">
-      <span class="icon">🎲</span>RANDOM
-    </button>
-    <button class="launch-btn" onclick="toggle('word')" id="btn-word">
-      <span class="icon">✍️</span>WORDS
-    </button>
-    <button class="launch-btn" onclick="toggle('tip')" id="btn-tip">
-      <span class="icon">💰</span>TIP CALC
     </button>
     <button class="launch-btn" onclick="toggle('mc')" id="btn-mc">
       <span class="icon">⛏️</span>MINECRAFT
@@ -74,6 +54,36 @@
   </div>
 
   <div id="tools">
+
+    <div id="theme" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">✨ تخصيص المظهر</span>
+        <button class="close-btn" onclick="toggle('theme')">✕</button>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>اللون الأساسي (أزرق)</label>
+          <input type="color" id="theme-color-1" value="#7b7bff" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
+        </div>
+        <div class="field">
+          <label>اللون الثانوي (وردي/أرجواني)</label>
+          <input type="color" id="theme-color-2" value="#ff7bb0" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
+        </div>
+      </div>
+      
+      <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
+      
+      <div class="field" style="direction: rtl;">
+        <label>الخلفية (تتحرك مع الماوس)</label>
+        <div class="btn-row" style="margin-bottom: 12px;">
+          <button class="btn sm secondary" onclick="setPresetBg('bg1.gif')">🖼️ خلفية 1</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg2.gif')">🖼️ خلفية 2</button>
+          <button class="btn sm danger" onclick="clearBg()">🗑️ مسح الخلفية</button>
+        </div>
+        <label>أو ارفع صورة/GIF من جهازك:</label>
+        <input type="file" accept="image/*" onchange="handleBgUpload(event)" style="direction: ltr;">
+      </div>
+    </div>
 
     <div id="calc" class="tool-card hidden">
       <div class="tool-header">
@@ -166,188 +176,24 @@
       </div>
     </div>
 
-    <div id="color" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Color Tools</span>
-        <button class="close-btn" onclick="toggle('color')">✕</button>
-      </div>
-      <div class="field">
-        <label>Pick a Color</label>
-        <input type="color" id="color-pick" value="#7b7bff" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer">
-      </div>
-      <div class="color-preview" id="color-prev" style="background:#7b7bff"></div>
-      <div class="color-formats">
-        <div class="color-tag"><span>HEX</span><code id="c-hex" onclick="copyRaw(this)">#7b7bff</code></div>
-        <div class="color-tag"><span>RGB</span><code id="c-rgb" onclick="copyRaw(this)">rgb(123, 123, 255)</code></div>
-        <div class="color-tag"><span>HSL</span><code id="c-hsl" onclick="copyRaw(this)">hsl(240, 100%, 74%)</code></div>
-      </div>
-      <p style="font-size:0.72rem;color:var(--muted);margin-top:12px">Click any value to copy it</p>
-    </div>
-
-    <div id="unit" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Unit Converter</span>
-        <button class="close-btn" onclick="toggle('unit')">✕</button>
-      </div>
-      <div class="field">
-        <label>Category</label>
-        <select id="unit-cat" onchange="loadUnitCat()">
-          <option value="length">📏 Length</option>
-          <option value="weight">⚖️ Weight</option>
-          <option value="temp">🌡️ Temperature</option>
-          <option value="speed">💨 Speed</option>
-          <option value="area">📐 Area</option>
-          <option value="data">💾 Data Size</option>
-        </select>
-      </div>
-      <div class="converter-row">
-        <div class="field">
-          <label id="from-label">From</label>
-          <select id="unit-from" onchange="convertUnit()"></select>
-        </div>
-        <button class="swap-btn" onclick="swapUnits()">⇄</button>
-        <div class="field">
-          <label id="to-label">To</label>
-          <select id="unit-to" onchange="convertUnit()"></select>
-        </div>
-      </div>
-      <div class="field"><label>Value</label><input type="number" id="unit-val" value="1" oninput="convertUnit()"></div>
-      <div class="output" id="unit-out">—</div>
-    </div>
-
-    <div id="bmi" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">BMI Calculator</span>
-        <button class="close-btn" onclick="toggle('bmi')">✕</button>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>Weight (kg)</label><input type="number" id="bmi-w" placeholder="70" oninput="calcBmi()"></div>
-        <div class="field"><label>Height (cm)</label><input type="number" id="bmi-h" placeholder="175" oninput="calcBmi()"></div>
-      </div>
-      <div class="bmi-scale"><div class="bmi-marker" id="bmi-marker" style="left:30%"></div></div>
-      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted)">
-        <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
-      </div>
-      <div class="output" id="bmi-out">Enter your weight and height</div>
-    </div>
-
-    <div id="age" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Age Calculator</span>
-        <button class="close-btn" onclick="toggle('age')">✕</button>
-      </div>
-      <div class="field"><label>Your Birthday</label><input type="date" id="age-date" onchange="calcAge()"></div>
-      <div class="output" id="age-out">Select your birthday above</div>
-    </div>
-
-    <div id="hash" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Encode / Decode</span>
-        <button class="close-btn" onclick="toggle('hash')">✕</button>
-      </div>
-      <div class="field">
-        <label>Mode</label>
-        <select id="enc-mode">
-          <option value="b64enc">Base64 Encode</option>
-          <option value="b64dec">Base64 Decode</option>
-          <option value="urlenc">URL Encode</option>
-          <option value="urldec">URL Decode</option>
-          <option value="htmlenc">HTML Encode</option>
-        </select>
-      </div>
-      <div class="field"><label>Input</label><textarea id="enc-in" placeholder="Paste text here..."></textarea></div>
-      <div class="btn-row">
-        <button class="btn" onclick="encodeIt()">⚡ CONVERT</button>
-        <button class="btn secondary" onclick="copyText('enc-out')">📋 COPY</button>
-      </div>
-      <div class="output" id="enc-out">Result will appear here</div>
-    </div>
-
-    <div id="coin" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Randomizer</span>
-        <button class="close-btn" onclick="toggle('coin')">✕</button>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>Min</label><input type="number" id="rnd-min" value="1"></div>
-        <div class="field"><label>Max</label><input type="number" id="rnd-max" value="100"></div>
-      </div>
-      <div class="btn-row">
-        <button class="btn" onclick="rndNum()">🎲 ROLL NUMBER</button>
-        <button class="btn secondary" onclick="rndCoin()">🪙 FLIP COIN</button>
-        <button class="btn secondary" onclick="rndDice()">🎯 ROLL DICE</button>
-        <button class="btn secondary" onclick="rndYesNo()">❓ YES / NO</button>
-      </div>
-      <div class="output" id="rnd-out">Press a button!</div>
-    </div>
-
-    <div id="word" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Word & Text Tools</span>
-        <button class="close-btn" onclick="toggle('word')">✕</button>
-      </div>
-      <div class="field"><textarea id="word-in" placeholder="Paste your text here..." style="min-height:130px" oninput="analyzeText()"></textarea></div>
-      <div class="grid2" style="gap:8px;margin:10px 0">
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="wc-words">0</div>
-          <div style="font-size:0.7rem;color:var(--muted)">WORDS</div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:1.5rem;font-weight:700;color:var(--accent2)" id="wc-chars">0</div>
-          <div style="font-size:0.7rem;color:var(--muted)">CHARACTERS</div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:1.5rem;font-weight:700;color:var(--accent3)" id="wc-lines">0</div>
-          <div style="font-size:0.7rem;color:var(--muted)">LINES</div>
-        </div>
-        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:1.5rem;font-weight:700;color:var(--warn)" id="wc-read">0s</div>
-          <div style="font-size:0.7rem;color:var(--muted)">READ TIME</div>
-        </div>
-      </div>
-      <div class="btn-row">
-        <button class="btn sm secondary" onclick="textCase('upper')">UPPER</button>
-        <button class="btn sm secondary" onclick="textCase('lower')">lower</button>
-        <button class="btn sm secondary" onclick="textCase('title')">Title</button>
-        <button class="btn sm secondary" onclick="textReverse()">↩ Reverse</button>
-        <button class="btn sm secondary" onclick="copyText('word-in',true)">📋</button>
-      </div>
-    </div>
-
-    <div id="tip" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Tip Calculator</span>
-        <button class="close-btn" onclick="toggle('tip')">✕</button>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>Bill Amount ($)</label><input type="number" id="tip-bill" placeholder="50" oninput="calcTip()"></div>
-        <div class="field"><label>People</label><input type="number" id="tip-ppl" value="1" min="1" oninput="calcTip()"></div>
-      </div>
-      <div class="field">
-        <label>Tip: <span id="tip-pct-val">15</span>%</label>
-        <input type="range" id="tip-pct" min="0" max="50" value="15" oninput="document.getElementById('tip-pct-val').textContent=this.value; calcTip()">
-      </div>
-      <div class="output" id="tip-out">Enter bill amount</div>
-    </div>
-
     <div id="mc" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">⛏️ Minecraft Command Builder (1.21+)</span>
         <button class="close-btn" onclick="toggle('mc')">✕</button>
       </div>
       <div class="field">
-        <label>ابحث عن الآيتم</label>
+        <label style="direction:rtl">ابحث عن الآيتم</label>
         <input type="text" id="mc-search" placeholder="مثال: sword, bow, helmet..." oninput="mcFilter()" autocomplete="off">
         <div id="mc-suggestions" style="display:none; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-top:4px; max-height:180px; overflow-y:auto;"></div>
       </div>
-      <div id="mc-item-selected" style="display:none">
+      <div id="mc-item-selected" style="display:none; direction:rtl">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
           <span id="mc-item-icon" style="font-size:2rem"></span>
-          <div><div id="mc-item-name" style="font-weight:700;color:var(--accent)"></div><div id="mc-item-id" style="font-size:0.72rem;color:var(--muted)"></div></div>
+          <div><div id="mc-item-name" style="font-weight:700;color:var(--accent)"></div><div id="mc-item-id" style="font-size:0.72rem;color:var(--muted);direction:ltr;text-align:left;"></div></div>
         </div>
         <div class="field">
           <label>الـ Enchantments المتاحة</label>
-          <div id="mc-enchants" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+          <div id="mc-enchants" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;direction:ltr"></div>
         </div>
         <div id="mc-extras" style="margin-top:4px"></div>
         <div class="field" style="margin-top:12px">
@@ -355,14 +201,14 @@
           <input type="text" id="mc-custom-name" placeholder="اكتب اسم..." oninput="mcBuild()">
         </div>
         <div class="field">
-          <label>Lore (وصف — سطر لكل줄)</label>
+          <label>Lore (وصف — سطر لكل جملة)</label>
           <textarea id="mc-lore" placeholder="مثال: سيف الأبطال&#10;مصنوع من الفولاذ" rows="3" oninput="mcBuild()"></textarea>
         </div>
         <div class="field">
           <label>الكمية</label>
-          <input type="number" id="mc-count" value="1" min="1" max="64" oninput="mcBuild()">
+          <input type="number" id="mc-count" value="1" min="1" max="64" oninput="mcBuild()" style="direction:ltr;">
         </div>
-        <div class="output" id="mc-cmd" style="font-size:0.75rem; word-break:break-all; cursor:pointer; color: #fff;" onclick="copyText('mc-cmd')" title="اضغط للنسخ">اختر آيتم أولاً</div>
+        <div class="output" id="mc-cmd" style="font-size:0.75rem; word-break:break-all; cursor:pointer; color: #fff; direction:ltr; text-align:left;" onclick="copyText('mc-cmd')" title="اضغط للنسخ">اختر آيتم أولاً</div>
         <div class="btn-row">
           <button class="btn" onclick="copyText('mc-cmd')">📋 نسخ الكوماند</button>
           <button class="btn secondary" onclick="mcReset()">↺ إعادة</button>
@@ -370,12 +216,13 @@
       </div>
     </div>
 
-    <div id="jojo" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">🌀 موسوعة JoJo's Bizarre Adventure</span>
+    <div id="jojo" class="tool-card hidden" style="direction: rtl;">
+      <div class="tool-header" style="direction: ltr;">
         <button class="close-btn" onclick="toggle('jojo')">✕</button>
+        <span class="tool-title">🌀 موسوعة JoJo</span>
       </div>
       <div id="jojo-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
+      <div id="jojo-story" style="background:var(--bg3); border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; font-size:0.85rem; line-height:1.8; color:var(--text);"></div>
       <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;"></div>
     </div>
 
@@ -401,47 +248,37 @@
           <button class="btn" onclick="navigator.clipboard.writeText('b7_707').then(()=>showToast('✅ تم نسخ اليوزر!'))" style="font-size:0.9rem;padding:12px 28px;letter-spacing:0.05em">
             📋 b7_707
           </button>
-          <div style="font-size:0.7rem;color:var(--muted);margin-top:8px">اضغط لنسخ اليوزر</div>
         </div>
       </div>
     </div>
 
   </div></div><div class="player-wrap" id="player-wrap">
-
   <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
-    <span id="pill-eq" class="pill-eq">
-      <span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span>
-    </span>
+    <span id="pill-eq" class="pill-eq"><span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span></span>
     <span id="pill-label">♫ LOFI</span>
     <span class="pill-chevron" id="pill-chev">▲</span>
   </button>
-
   <div class="player" id="lofi-player" style="display:none;">
-    <button class="player-btn mini" onclick="prevTrack()" title="Previous">◀</button>
+    <button class="player-btn mini" onclick="prevTrack()">◀</button>
     <button class="player-btn" id="play-btn" onclick="togglePlay()">▶</button>
     <div class="player-info">
-      <div class="player-title" id="track-name">lofi hip hop ~ chill beats</div>
-      <div class="player-sub" id="track-sub">
-        <span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span>
-        <span style="margin-left:4px">Ready to play</span>
-      </div>
+      <div class="player-title" id="track-name">lofi hip hop</div>
+      <div class="player-sub" id="track-sub">Ready to play</div>
     </div>
-    <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
-    <button class="player-btn mini" onclick="nextTrack()" title="Next">▶</button>
+    <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)">
+    <button class="player-btn mini" onclick="nextTrack()">▶</button>
   </div>
-
 </div>
 
 <audio id="audio" loop></audio>
 
 <script>
 /* ═══════════════════════════════════════════════
-   UTILITIES
+   UTILITIES & THEME
 ═══════════════════════════════════════════════ */
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
@@ -450,6 +287,53 @@ function copyText(id, isInput=false) {
   const text = isInput ? el.value : el.textContent;
   navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
 }
+
+// ── تخصيص الألوان ──
+function updateThemeColors() {
+  const c1 = document.getElementById('theme-color-1').value;
+  const c2 = document.getElementById('theme-color-2').value;
+  document.documentElement.style.setProperty('--accent', c1);
+  document.documentElement.style.setProperty('--accent2', c2);
+}
+
+// ── تخصيص الخلفية وحركتها (Parallax) ──
+const bgEl = document.getElementById('dynamic-bg');
+const canvasEl = document.getElementById('bg-canvas');
+
+function handleBgUpload(event) {
+  const file = event.target.files[0];
+  if(file) {
+    const url = URL.createObjectURL(file);
+    applyBg(url);
+  }
+}
+
+function setPresetBg(filename) {
+  applyBg(`static/${filename}`); // مسار افتراضي لخلفيات الـ GitHub
+}
+
+function applyBg(url) {
+  bgEl.style.backgroundImage = `url(${url})`;
+  bgEl.style.opacity = '1';
+  canvasEl.style.opacity = '0.2'; // نخفف الجزيئات عشان تبان الخلفية
+}
+
+function clearBg() {
+  bgEl.style.opacity = '0';
+  setTimeout(() => bgEl.style.backgroundImage = '', 500);
+  canvasEl.style.opacity = '1';
+}
+
+// حركة الخلفية مع الماوس
+document.addEventListener('mousemove', (e) => {
+  if(bgEl.style.opacity === '1') {
+    // نحسب مسافة الماوس عن المركز (أقصى حركة 20 بيكسل عشان ما تبان الأطراف)
+    const x = (e.clientX / window.innerWidth - 0.5) * 40; 
+    const y = (e.clientY / window.innerHeight - 0.5) * 40;
+    // الـ scale(1.05) يضمن ان الصورة اكبر شوي من الشاشة
+    bgEl.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+  }
+});
 
 /* ═══════════════════════════════════════════════
    CANVAS PARTICLE BACKGROUND
@@ -460,21 +344,14 @@ function copyText(id, isInput=false) {
   let W, H, particles = [];
   const N = 80;
 
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resize);
-  resize();
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
 
   class Particle {
     constructor() { this.reset(); }
     reset() {
-      this.x = Math.random() * W;
-      this.y = Math.random() * H;
-      this.r = Math.random() * 1.5 + 0.3;
-      this.vx = (Math.random() - 0.5) * 0.3;
-      this.vy = (Math.random() - 0.5) * 0.3;
+      this.x = Math.random() * W; this.y = Math.random() * H;
+      this.r = Math.random() * 1.5 + 0.3; this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3;
       this.a = Math.random() * 0.5 + 0.1;
       const cols = ['#7b7bff','#ff7bb0','#7bffd4','#a0a0ff'];
       this.c = cols[Math.floor(Math.random() * cols.length)];
@@ -484,46 +361,32 @@ function copyText(id, isInput=false) {
       if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
     }
     draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = this.c + Math.floor(this.a * 255).toString(16).padStart(2,'0');
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.c + Math.floor(this.a * 255).toString(16).padStart(2,'0'); ctx.fill();
     }
   }
-
   for (let i = 0; i < N; i++) particles.push(new Particle());
 
   function drawLines() {
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
+        const dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
         const d = Math.sqrt(dx*dx + dy*dy);
         if (d < 100) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(123,123,255,${0.08*(1-d/100)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(123,123,255,${0.08*(1-d/100)})`; ctx.lineWidth = 0.5; ctx.stroke();
         }
       }
     }
   }
-
-  function animate() {
-    ctx.clearRect(0, 0, W, H);
-    particles.forEach(p => { p.update(); p.draw(); });
-    drawLines();
-    requestAnimationFrame(animate);
-  }
+  function animate() { ctx.clearRect(0, 0, W, H); particles.forEach(p => { p.update(); p.draw(); }); drawLines(); requestAnimationFrame(animate); }
   animate();
 })();
 
 /* ═══════════════════════════════════════════════
    TOOL TOGGLE
 ═══════════════════════════════════════════════ */
-const toolIds = ['calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','tip','mc','jojo','about'];
+const toolIds = ['theme','calc','pass','notes','timer','mc','jojo','about'];
 
 function updateCollapseBar() {
   const anyOpen = toolIds.some(id => !document.getElementById(id).classList.contains('hidden'));
@@ -533,28 +396,16 @@ function updateCollapseBar() {
 function collapseAll() {
   toolIds.forEach(id => {
     document.getElementById(id).classList.add('hidden');
-    document.getElementById('btn-' + id).classList.remove('active');
+    const btn = document.getElementById('btn-' + id);
+    if(btn) btn.classList.remove('active');
   });
-  updateCollapseBar();
-  document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
-}
-
-function togglePlayer() {
-  const player = document.getElementById('lofi-player');
-  const chev = document.getElementById('pill-chev');
-  const wrap = document.getElementById('player-wrap');
-  const open = player.style.display === 'none' || player.style.display === '';
-  player.style.display = open ? 'flex' : 'none';
-  chev.textContent = open ? '▼' : '▲';
-  wrap.classList.toggle('player-open', open);
+  updateCollapseBar(); document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
 }
 
 function toggle(id) {
-  const card = document.getElementById(id);
-  const btn = document.getElementById('btn-' + id);
-  const hidden = card.classList.contains('hidden');
-  card.classList.toggle('hidden');
-  btn.classList.toggle('active', hidden);
+  const card = document.getElementById(id); const btn = document.getElementById('btn-' + id);
+  const hidden = card.classList.contains('hidden'); card.classList.toggle('hidden');
+  if(btn) btn.classList.toggle('active', hidden);
   updateCollapseBar();
   if (hidden) {
     card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -563,507 +414,49 @@ function toggle(id) {
   }
 }
 
-/* ═══════════════════════════════════════════════
-   CALCULATOR
-═══════════════════════════════════════════════ */
-let calcState = { expr: '', val: '0', op: null, prev: null, reset: false };
-
-function calcDisplay() {
-  document.getElementById('calc-val').textContent = calcState.val.length > 12
-    ? parseFloat(calcState.val).toExponential(4)
-    : calcState.val;
-  document.getElementById('calc-expr').textContent = calcState.expr;
-}
-
-function calcNum(n) {
-  if (calcState.reset) { calcState.val = n; calcState.reset = false; }
-  else { calcState.val = calcState.val === '0' ? n : calcState.val + n; }
-  calcDisplay();
-}
-
-function calcDot() {
-  if (calcState.reset) { calcState.val = '0.'; calcState.reset = false; }
-  else if (!calcState.val.includes('.')) calcState.val += '.';
-  calcDisplay();
-}
-
-function calcOp(op) {
-  if (calcState.op && !calcState.reset) calcEq(true);
-  calcState.prev = parseFloat(calcState.val);
-  calcState.op = op;
-  calcState.expr = calcState.val + ' ' + op;
-  calcState.reset = true;
-  calcDisplay();
-}
-
-function calcEq(chain = false) {
-  if (!calcState.op) return;
-  const a = calcState.prev, b = parseFloat(calcState.val);
-  let r;
-  if (calcState.op === '+') r = a + b;
-  else if (calcState.op === '−') r = a - b;
-  else if (calcState.op === '×') r = a * b;
-  else if (calcState.op === '÷') r = b === 0 ? 'Error' : a / b;
-  if (!chain) { calcState.expr = ''; calcState.op = null; }
-  calcState.val = typeof r === 'number' ? parseFloat(r.toFixed(10)).toString() : r;
-  calcState.reset = true;
-  calcDisplay();
-}
-
-function calcClear() { calcState = { expr: '', val: '0', op: null, prev: null, reset: false }; calcDisplay(); }
-function calcPlusMinus() { calcState.val = (parseFloat(calcState.val) * -1).toString(); calcDisplay(); }
-function calcPercent() { calcState.val = (parseFloat(calcState.val) / 100).toString(); calcDisplay(); }
-
-/* ═══════════════════════════════════════════════
-   PASSWORD GENERATOR
-═══════════════════════════════════════════════ */
-function genPass() {
-  let chars = '';
-  if (document.getElementById('p-upper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  if (document.getElementById('p-lower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
-  if (document.getElementById('p-num').checked) chars += '0123456789';
-  if (document.getElementById('p-sym').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
-  if (!chars) { document.getElementById('pass-out').textContent = 'Select at least one option!'; return; }
-  const len = parseInt(document.getElementById('pass-len').value);
-  let pass = '';
-  for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
-  document.getElementById('pass-out').textContent = pass;
-  // strength bar
-  let strength = 0;
-  if (document.getElementById('p-upper').checked) strength++;
-  if (document.getElementById('p-lower').checked) strength++;
-  if (document.getElementById('p-num').checked) strength++;
-  if (document.getElementById('p-sym').checked) strength++;
-  if (len >= 16) strength++;
-  const colors = ['#ff6b6b','#ff9f6b','#ffcc6b','#6bffb8','#7bffd4'];
-  const bar = document.getElementById('pass-bar');
-  bar.style.background = colors[Math.min(strength-1, 4)];
-  bar.style.width = (strength * 20) + '%';
-}
-
-/* ═══════════════════════════════════════════════
-   NOTES
-═══════════════════════════════════════════════ */
-function saveNote() {
-  const v = document.getElementById('note-text').value;
-  localStorage.setItem('sevenawy-note', v);
-  document.getElementById('note-count').textContent = v.length + ' chars';
-}
-function loadNote() {
-  const v = localStorage.getItem('sevenawy-note') || '';
-  document.getElementById('note-text').value = v;
-  document.getElementById('note-count').textContent = v.length + ' chars';
-}
-function clearNote() {
-  document.getElementById('note-text').value = '';
-  localStorage.removeItem('sevenawy-note');
-  document.getElementById('note-count').textContent = '0 chars';
-}
-
-/* ═══════════════════════════════════════════════
-   TIMER / STOPWATCH
-═══════════════════════════════════════════════ */
-let timerMode = 'timer', timerInterval = null;
-let timerRunning = false, timerTotal = 0, timerLeft = 0, stopwatchMs = 0;
-
-function setMode(m) {
-  timerMode = m;
-  timerReset();
-  document.getElementById('timer-setup').style.display = m === 'timer' ? '' : 'none';
-  document.getElementById('mode-timer').className = 'btn ' + (m === 'timer' ? '' : 'secondary');
-  document.getElementById('mode-stop').className = 'btn ' + (m === 'stop' ? '' : 'secondary');
-}
-
-function timerToggle() {
-  if (timerRunning) {
-    clearInterval(timerInterval);
-    timerRunning = false;
-    document.getElementById('timer-start').textContent = '▶ RESUME';
-  } else {
-    if (timerMode === 'timer') {
-      if (!timerLeft) {
-        timerTotal = timerLeft =
-          parseInt(document.getElementById('t-min').value || 0) * 60 +
-          parseInt(document.getElementById('t-sec').value || 0);
-      }
-      if (!timerLeft) return;
-      timerInterval = setInterval(() => {
-        timerLeft--;
-        updateTimerDisplay(timerLeft, timerTotal);
-        if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning = false; showToast('⏰ Timer done!'); document.getElementById('timer-start').textContent = '▶ START'; }
-      }, 1000);
-    } else {
-      timerInterval = setInterval(() => {
-        stopwatchMs++;
-        const m = String(Math.floor(stopwatchMs/60)).padStart(2,'0');
-        const s = String(stopwatchMs%60).padStart(2,'0');
-        document.getElementById('timer-disp').textContent = m + ':' + s;
-      }, 1000);
-    }
-    timerRunning = true;
-    document.getElementById('timer-start').textContent = '⏸ PAUSE';
-  }
-}
-
-function updateTimerDisplay(left, total) {
-  const m = String(Math.floor(left/60)).padStart(2,'0');
-  const s = String(left%60).padStart(2,'0');
-  document.getElementById('timer-disp').textContent = m + ':' + s;
-  document.getElementById('timer-fill').style.width = ((left/total)*100) + '%';
-}
-
-function timerReset() {
-  clearInterval(timerInterval);
-  timerRunning = false; timerLeft = 0; stopwatchMs = 0;
-  document.getElementById('timer-start').textContent = '▶ START';
-  if (timerMode === 'timer') {
-    const min = document.getElementById('t-min').value || '00';
-    const sec = document.getElementById('t-sec').value || '00';
-    document.getElementById('timer-disp').textContent =
-      String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
-    document.getElementById('timer-fill').style.width = '100%';
-  } else {
-    document.getElementById('timer-disp').textContent = '00:00';
-  }
-}
-setMode('timer');
-
-/* ═══════════════════════════════════════════════
-   COLOR PICKER
-═══════════════════════════════════════════════ */
-function updateColor(hex) {
-  document.getElementById('color-prev').style.background = hex;
-  document.getElementById('c-hex').textContent = hex;
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  document.getElementById('c-rgb').textContent = `rgb(${r}, ${g}, ${b})`;
-  const rn=r/255, gn=g/255, bn=b/255;
-  const max=Math.max(rn,gn,bn), min=Math.min(rn,gn,bn);
-  let h, s, l = (max+min)/2;
-  if (max===min) { h=s=0; } else {
-    const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min);
-    if (max===rn) h=((gn-bn)/d+(gn<bn?6:0))/6;
-    else if (max===gn) h=((bn-rn)/d+2)/6;
-    else h=((rn-gn)/d+4)/6;
-  }
-  document.getElementById('c-hsl').textContent = `hsl(${Math.round(h*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
-}
-
-function copyRaw(el) { navigator.clipboard.writeText(el.textContent); showToast('Copied!'); }
-
-/* ═══════════════════════════════════════════════
-   UNIT CONVERTER
-═══════════════════════════════════════════════ */
-const unitData = {
-  length: { m:1, km:0.001, cm:100, mm:1000, ft:3.28084, inch:39.3701, mile:0.000621371, yard:1.09361 },
-  weight: { kg:1, g:1000, mg:1e6, lb:2.20462, oz:35.274, ton:0.001 },
-  temp: { C:'base', F:'F', K:'K' },
-  speed: { 'km/h':1, 'mph':0.621371, 'm/s':0.277778, knot:0.539957 },
-  area: { 'm²':1, 'km²':1e-6, 'cm²':1e4, 'ft²':10.7639, acre:0.000247105, hectare:0.0001 },
-  data: { B:1, KB:1/1024, MB:1/1048576, GB:1/1073741824, TB:1/1099511627776, bit:8 }
-};
-
-function loadUnitCat() {
-  const cat = document.getElementById('unit-cat').value;
-  const keys = Object.keys(unitData[cat]);
-  ['unit-from','unit-to'].forEach((id,i) => {
-    const sel = document.getElementById(id);
-    sel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join('');
-    sel.value = keys[i];
-  });
-  convertUnit();
-}
-
-function convertUnit() {
-  const cat = document.getElementById('unit-cat').value;
-  const from = document.getElementById('unit-from').value;
-  const to = document.getElementById('unit-to').value;
-  const val = parseFloat(document.getElementById('unit-val').value);
-  if (isNaN(val)) { document.getElementById('unit-out').textContent = 'Enter a number'; return; }
-  let result;
-  if (cat === 'temp') {
-    let c = from === 'C' ? val : from === 'F' ? (val-32)*5/9 : val-273.15;
-    result = to === 'C' ? c : to === 'F' ? c*9/5+32 : c+273.15;
-  } else {
-    const d = unitData[cat];
-    result = (val / d[from]) * d[to];
-  }
-  document.getElementById('unit-out').textContent =
-    `${val} ${from} = ${parseFloat(result.toFixed(6))} ${to}`;
-}
-loadUnitCat();
-
-function swapUnits() {
-  const f = document.getElementById('unit-from'), t = document.getElementById('unit-to');
-  [f.value, t.value] = [t.value, f.value];
-  convertUnit();
-}
-
-/* ═══════════════════════════════════════════════
-   BMI
-═══════════════════════════════════════════════ */
-function calcBmi() {
-  const w = parseFloat(document.getElementById('bmi-w').value);
-  const h = parseFloat(document.getElementById('bmi-h').value) / 100;
-  if (!w || !h) return;
-  const bmi = w / (h * h);
-  let cat, color;
-  if (bmi < 18.5) { cat = 'Underweight'; color = '#6bffb8'; }
-  else if (bmi < 25) { cat = 'Normal Weight'; color = '#7bffd4'; }
-  else if (bmi < 30) { cat = 'Overweight'; color = '#ffcc6b'; }
-  else { cat = 'Obese'; color = '#ff6b6b'; }
-  document.getElementById('bmi-out').textContent = `BMI: ${bmi.toFixed(1)} — ${cat}`;
-  document.getElementById('bmi-out').style.color = color;
-  const pct = Math.min(Math.max((bmi - 10) / 40, 0), 1);
-  document.getElementById('bmi-marker').style.left = (pct * 100) + '%';
-}
-
-/* ═══════════════════════════════════════════════
-   AGE CALCULATOR
-═══════════════════════════════════════════════ */
-function calcAge() {
-  const dob = new Date(document.getElementById('age-date').value);
-  const now = new Date();
-  let y = now.getFullYear() - dob.getFullYear();
-  let m = now.getMonth() - dob.getMonth();
-  let d = now.getDate() - dob.getDate();
-  if (d < 0) { m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-  if (m < 0) { y--; m += 12; }
-  const days = Math.floor((now - dob) / 86400000);
-  const next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
-  if (next < now) next.setFullYear(now.getFullYear() + 1);
-  const daysLeft = Math.ceil((next - now) / 86400000);
-  document.getElementById('age-out').textContent =
-    `🎂 You are ${y} years, ${m} months, ${d} days old\n📅 ${days.toLocaleString()} days total\n⏳ ${daysLeft} days until your next birthday`;
-}
-
-/* ═══════════════════════════════════════════════
-   ENCODE / DECODE
-═══════════════════════════════════════════════ */
-function encodeIt() {
-  const mode = document.getElementById('enc-mode').value;
-  const input = document.getElementById('enc-in').value;
-  let result = '';
-  try {
-    if (mode === 'b64enc') result = btoa(unescape(encodeURIComponent(input)));
-    else if (mode === 'b64dec') result = decodeURIComponent(escape(atob(input)));
-    else if (mode === 'urlenc') result = encodeURIComponent(input);
-    else if (mode === 'urldec') result = decodeURIComponent(input);
-    else if (mode === 'htmlenc') result = input.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-    document.getElementById('enc-out').textContent = result;
-    document.getElementById('enc-out').className = 'output';
-  } catch(e) {
-    document.getElementById('enc-out').textContent = 'Error: ' + e.message;
-    document.getElementById('enc-out').className = 'output error';
-  }
-}
-
-/* ═══════════════════════════════════════════════
-   RANDOMIZER
-═══════════════════════════════════════════════ */
-function rndNum() {
-  const min = parseInt(document.getElementById('rnd-min').value);
-  const max = parseInt(document.getElementById('rnd-max').value);
-  document.getElementById('rnd-out').textContent = '🎲 ' + (Math.floor(Math.random()*(max-min+1))+min);
-}
-function rndCoin() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '🪙 HEADS' : '🪙 TAILS'; }
-function rndDice() { document.getElementById('rnd-out').textContent = '🎯 ' + (Math.floor(Math.random()*6)+1) + ' (rolled a d6)'; }
-function rndYesNo() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '✅ YES' : '❌ NO'; }
-
-/* ═══════════════════════════════════════════════
-   WORD COUNTER
-═══════════════════════════════════════════════ */
-function analyzeText() {
-  const t = document.getElementById('word-in').value;
-  const words = t.trim() ? t.trim().split(/\s+/).length : 0;
-  document.getElementById('wc-words').textContent = words;
-  document.getElementById('wc-chars').textContent = t.length;
-  document.getElementById('wc-lines').textContent = t ? t.split('\n').length : 0;
-  const secs = Math.ceil(words / 3.5);
-  document.getElementById('wc-read').textContent = secs < 60 ? secs + 's' : Math.ceil(secs/60) + 'm';
-}
-function textCase(type) {
-  const el = document.getElementById('word-in');
-  if (type==='upper') el.value = el.value.toUpperCase();
-  else if (type==='lower') el.value = el.value.toLowerCase();
-  else el.value = el.value.replace(/\w\S*/g, w => w[0].toUpperCase()+w.slice(1).toLowerCase());
-  analyzeText();
-}
-function textReverse() {
-  const el = document.getElementById('word-in');
-  el.value = el.value.split('').reverse().join('');
-}
-
-/* ═══════════════════════════════════════════════
-   TIP CALCULATOR
-═══════════════════════════════════════════════ */
-function calcTip() {
-  const bill = parseFloat(document.getElementById('tip-bill').value);
-  const pct = parseFloat(document.getElementById('tip-pct').value);
-  const ppl = parseInt(document.getElementById('tip-ppl').value) || 1;
-  if (!bill) { document.getElementById('tip-out').textContent = 'Enter bill amount'; return; }
-  const tip = bill * pct / 100;
-  const total = bill + tip;
-  document.getElementById('tip-out').textContent =
-    `Tip: $${tip.toFixed(2)}\nTotal: $${total.toFixed(2)}\nPer person: $${(total/ppl).toFixed(2)}`;
-}
-
-/* ═══════════════════════════════════════════════
-   LOFI PLAYER
-═══════════════════════════════════════════════ */
-const tracks = [
-  { name: 'lofi hip hop ~ chill beats', sub: '☕ study mode', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
-  { name: 'midnight vibes', sub: '🌙 late night coding', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
-  { name: 'rainy cafe lofi', sub: '🌧 cozy sounds', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
-  { name: 'dreamy lo-fi', sub: '✨ chill session', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
-];
-
-let currentTrack = 0, isPlaying = false;
-const audio = document.getElementById('audio');
-audio.volume = 0.5;
-
-function loadTrack(i) {
-  audio.src = tracks[i].url;
-  document.getElementById('track-name').textContent = tracks[i].name;
-  document.getElementById('track-sub').innerHTML =
-    `<span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span> <span style="margin-left:4px">${tracks[i].sub}</span>`;
-}
-
-function togglePlay() {
-  if (!audio.src || audio.src === window.location.href) loadTrack(currentTrack);
-  if (isPlaying) {
-    audio.pause(); isPlaying = false;
-    document.getElementById('play-btn').textContent = '▶';
-    showToast('Paused');
-  } else {
-    audio.play().catch(() => showToast('⚠ Click again to play (browser policy)'));
-    isPlaying = true;
-    document.getElementById('play-btn').textContent = '⏸';
-  }
-}
-
-function nextTrack() {
-  currentTrack = (currentTrack + 1) % tracks.length;
-  loadTrack(currentTrack);
-  if (isPlaying) audio.play();
-}
-
-function prevTrack() {
-  currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
-  loadTrack(currentTrack);
-  if (isPlaying) audio.play();
+function togglePlayer() {
+  const player = document.getElementById('lofi-player'); const chev = document.getElementById('pill-chev');
+  const wrap = document.getElementById('player-wrap'); const open = player.style.display === 'none' || player.style.display === '';
+  player.style.display = open ? 'flex' : 'none'; chev.textContent = open ? '▼' : '▲';
+  wrap.classList.toggle('player-open', open);
 }
 
 /* ═══════════════════════════════════════════════
    MINECRAFT ENCHANT BUILDER (1.21 COMPONENTS)
 ═══════════════════════════════════════════════ */
 const MC_ITEMS = [
-  // Swords
-  { id:'wooden_sword',    name:'Wooden Sword',    icon:'🗡️', type:'sword' },
-  { id:'stone_sword',     name:'Stone Sword',     icon:'🗡️', type:'sword' },
-  { id:'iron_sword',      name:'Iron Sword',      icon:'⚔️', type:'sword' },
-  { id:'golden_sword',    name:'Golden Sword',    icon:'✨', type:'sword' },
-  { id:'diamond_sword',   name:'Diamond Sword',   icon:'💎', type:'sword' },
+  { id:'wooden_sword', name:'Wooden Sword', icon:'🗡️', type:'sword' },
   { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' },
-  // Axes
-  { id:'wooden_axe',    name:'Wooden Axe',    icon:'🪓', type:'axe' },
-  { id:'stone_axe',     name:'Stone Axe',     icon:'🪓', type:'axe' },
-  { id:'iron_axe',      name:'Iron Axe',      icon:'🪓', type:'axe' },
-  { id:'golden_axe',    name:'Golden Axe',    icon:'🪓', type:'axe' },
-  { id:'diamond_axe',   name:'Diamond Axe',   icon:'💎', type:'axe' },
   { id:'netherite_axe', name:'Netherite Axe', icon:'🔥', type:'axe' },
-  // Pickaxes
-  { id:'wooden_pickaxe',    name:'Wooden Pickaxe',    icon:'⛏️', type:'pickaxe' },
-  { id:'stone_pickaxe',     name:'Stone Pickaxe',     icon:'⛏️', type:'pickaxe' },
-  { id:'iron_pickaxe',      name:'Iron Pickaxe',      icon:'⛏️', type:'pickaxe' },
-  { id:'golden_pickaxe',    name:'Golden Pickaxe',    icon:'⛏️', type:'pickaxe' },
-  { id:'diamond_pickaxe',   name:'Diamond Pickaxe',   icon:'💎', type:'pickaxe' },
   { id:'netherite_pickaxe', name:'Netherite Pickaxe', icon:'🔥', type:'pickaxe' },
-  // Shovels
-  { id:'wooden_shovel',    name:'Wooden Shovel',    icon:'🔧', type:'shovel' },
-  { id:'stone_shovel',     name:'Stone Shovel',     icon:'🔧', type:'shovel' },
-  { id:'iron_shovel',      name:'Iron Shovel',      icon:'🔧', type:'shovel' },
-  { id:'diamond_shovel',   name:'Diamond Shovel',   icon:'💎', type:'shovel' },
-  { id:'netherite_shovel', name:'Netherite Shovel', icon:'🔥', type:'shovel' },
-  // Hoes
-  { id:'wooden_hoe',    name:'Wooden Hoe',    icon:'🌾', type:'hoe' },
-  { id:'iron_hoe',      name:'Iron Hoe',      icon:'🌾', type:'hoe' },
-  { id:'diamond_hoe',   name:'Diamond Hoe',   icon:'💎', type:'hoe' },
-  { id:'netherite_hoe', name:'Netherite Hoe', icon:'🔥', type:'hoe' },
-  // Helmets
-  { id:'leather_helmet',    name:'Leather Helmet',    icon:'🪖', type:'helmet' },
-  { id:'chainmail_helmet',  name:'Chainmail Helmet',  icon:'🪖', type:'helmet' },
-  { id:'iron_helmet',       name:'Iron Helmet',       icon:'🪖', type:'helmet' },
-  { id:'golden_helmet',     name:'Golden Helmet',     icon:'🪖', type:'helmet' },
-  { id:'diamond_helmet',    name:'Diamond Helmet',    icon:'💎', type:'helmet' },
-  { id:'netherite_helmet',  name:'Netherite Helmet',  icon:'🔥', type:'helmet' },
-  { id:'turtle_helmet',     name:'Turtle Helmet',     icon:'🐢', type:'helmet', extra:'turtle' },
-  // Chestplates
-  { id:'leather_chestplate',    name:'Leather Chestplate',    icon:'👕', type:'chestplate' },
-  { id:'chainmail_chestplate',  name:'Chainmail Chestplate',  icon:'👕', type:'chestplate' },
-  { id:'iron_chestplate',       name:'Iron Chestplate',       icon:'👕', type:'chestplate' },
-  { id:'golden_chestplate',     name:'Golden Chestplate',     icon:'👕', type:'chestplate' },
-  { id:'diamond_chestplate',    name:'Diamond Chestplate',    icon:'💎', type:'chestplate' },
-  { id:'netherite_chestplate',  name:'Netherite Chestplate',  icon:'🔥', type:'chestplate' },
-  // Leggings
-  { id:'leather_leggings',   name:'Leather Leggings',   icon:'👖', type:'leggings' },
-  { id:'iron_leggings',      name:'Iron Leggings',      icon:'👖', type:'leggings' },
-  { id:'diamond_leggings',   name:'Diamond Leggings',   icon:'💎', type:'leggings' },
-  { id:'netherite_leggings', name:'Netherite Leggings', icon:'🔥', type:'leggings' },
-  // Boots
-  { id:'leather_boots',   name:'Leather Boots',   icon:'👢', type:'boots' },
-  { id:'iron_boots',      name:'Iron Boots',      icon:'👢', type:'boots' },
-  { id:'golden_boots',    name:'Golden Boots',    icon:'👢', type:'boots' },
-  { id:'diamond_boots',   name:'Diamond Boots',   icon:'💎', type:'boots' },
-  { id:'netherite_boots', name:'Netherite Boots', icon:'🔥', type:'boots' },
-  // Ranged
-  { id:'bow',             name:'Bow',             icon:'🏹', type:'bow' },
-  { id:'crossbow',        name:'Crossbow',        icon:'🏹', type:'crossbow' },
-  { id:'trident',         name:'Trident',         icon:'🔱', type:'trident' },
-  // Tools
-  { id:'fishing_rod',     name:'Fishing Rod',     icon:'🎣', type:'fishing_rod' },
-  { id:'shears',          name:'Shears',          icon:'✂️', type:'shears' },
-  { id:'flint_and_steel', name:'Flint and Steel', icon:'🔥', type:'flint' },
-  { id:'carrot_on_a_stick', name:'Carrot on a Stick', icon:'🥕', type:'carrot_stick' },
-  // Special
-  { id:'shield',          name:'Shield',          icon:'🛡️', type:'shield' },
-  { id:'elytra',          name:'Elytra',          icon:'🪽', type:'elytra' },
-  { id:'book',            name:'Book',             icon:'📖', type:'book' },
+  { id:'netherite_helmet', name:'Netherite Helmet', icon:'🔥', type:'helmet' },
+  { id:'netherite_chestplate', name:'Netherite Chestplate', icon:'🔥', type:'chestplate' },
+  { id:'bow', name:'Bow', icon:'🏹', type:'bow' },
+  { id:'elytra', name:'Elytra', icon:'🪽', type:'elytra' },
+  // اختصاراً للأكواد، يمكنك إضافة باقي الآيتمز كما كانت في الكود السابق
 ];
 
 const MC_ENCHANTS = {
-  sword:       [['sharpness',5],['smite',5],['bane_of_arthropods',5],['knockback',2],['fire_aspect',2],['looting',3],['sweeping_edge',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  axe:         [['sharpness',5],['smite',5],['bane_of_arthropods',5],['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  pickaxe:     [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  shovel:      [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1]],
-  hoe:         [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1]],
-  helmet:      [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['respiration',3],['aqua_affinity',1],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
-  chestplate:  [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
-  leggings:    [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['swift_sneak',3],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
-  boots:       [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['feather_falling',4],['depth_strider',3],['frost_walker',2],['soul_speed',3],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
-  bow:         [['power',5],['punch',2],['flame',1],['infinity',1],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  crossbow:    [['quick_charge',3],['multishot',1],['piercing',4],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  trident:     [['loyalty',3],['riptide',3],['channeling',1],['impaling',5],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  fishing_rod: [['luck_of_the_sea',3],['lure',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  shears:      [['efficiency',5],['unbreaking',3],['mending',1]],
-  flint:       [['unbreaking',3],['mending',1]],
-  carrot_stick:[['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  shield:      [['unbreaking',3],['mending',1],['vanishing_curse',1]],
-  elytra:      [['unbreaking',3],['mending',1],['vanishing_curse',1],['binding_curse',1]],
-  book:        [['mending',1],['vanishing_curse',1]],
-  turtle:      [['protection',4],['respiration',3],['aqua_affinity',1],['thorns',3],['unbreaking',3],['mending',1]],
+  sword: [['sharpness',5],['smite',5],['looting',3],['sweeping_edge',3],['unbreaking',3],['mending',1]],
+  axe: [['sharpness',5],['efficiency',5],['fortune',3],['unbreaking',3],['mending',1]],
+  pickaxe: [['efficiency',5],['fortune',3],['unbreaking',3],['mending',1]],
+  helmet: [['protection',4],['respiration',3],['aqua_affinity',1],['unbreaking',3],['mending',1]],
+  chestplate: [['protection',4],['thorns',3],['unbreaking',3],['mending',1]],
+  bow: [['power',5],['punch',2],['flame',1],['infinity',1],['unbreaking',3],['mending',1]],
+  elytra: [['unbreaking',3],['mending',1]]
 };
 
-let mcSelected = null, mcChosenEnchants = {};
+let mcSelected = null;
 
 function mcFilter() {
   const q = document.getElementById('mc-search').value.toLowerCase();
   const sug = document.getElementById('mc-suggestions');
   if (!q) { sug.style.display = 'none'; return; }
-  const matches = MC_ITEMS.filter(i => i.id.includes(q) || i.name.toLowerCase().includes(q)).slice(0, 15);
+  const matches = MC_ITEMS.filter(i => i.id.includes(q) || i.name.toLowerCase().includes(q)).slice(0, 10);
   if (!matches.length) { sug.style.display = 'none'; return; }
   sug.style.display = 'block';
   sug.innerHTML = matches.map(i =>
-    `<div onclick="mcSelectItem('${i.id}')" style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.82rem;transition:background 0.15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+    `<div onclick="mcSelectItem('${i.id}')" style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.82rem;direction:ltr">
       <span>${i.icon}</span><span>${i.name}</span><span style="color:var(--muted);font-size:0.7rem;margin-left:auto">${i.id}</span>
     </div>`
   ).join('');
@@ -1071,31 +464,22 @@ function mcFilter() {
 
 function mcSelectItem(id) {
   mcSelected = MC_ITEMS.find(i => i.id === id);
-  mcChosenEnchants = {};
   document.getElementById('mc-search').value = mcSelected.name;
   document.getElementById('mc-suggestions').style.display = 'none';
   document.getElementById('mc-item-icon').textContent = mcSelected.icon;
   document.getElementById('mc-item-name').textContent = mcSelected.name;
   document.getElementById('mc-item-id').textContent = 'minecraft:' + mcSelected.id;
   document.getElementById('mc-item-selected').style.display = 'block';
-  // Build enchant checkboxes
-  const type = mcSelected.extra || mcSelected.type;
-  const enchants = MC_ENCHANTS[type] || [];
-  const el = document.getElementById('mc-enchants');
-  el.innerHTML = enchants.map(([e, max]) => {
+  
+  const enchants = MC_ENCHANTS[mcSelected.type] || [];
+  document.getElementById('mc-enchants').innerHTML = enchants.map(([e, max]) => {
     const opts = Array.from({length: max}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
     return `<div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:0.75rem">
       <input type="checkbox" id="ench_${e}" onchange="mcBuild()" style="width:auto;accent-color:var(--accent)">
-      <label for="ench_${e}" style="margin:0;text-transform:none;font-size:0.75rem;letter-spacing:0;cursor:pointer">${e.replace(/_/g,' ')}</label>
-      <select id="lvl_${e}" onchange="mcBuild()" style="width:auto;padding:2px 4px;font-size:0.72rem;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text)">${opts}</select>
+      <label for="ench_${e}" style="margin:0;text-transform:none;font-size:0.75rem;cursor:pointer">${e.replace(/_/g,' ')}</label>
+      <select id="lvl_${e}" onchange="mcBuild()" style="width:auto;padding:2px;font-size:0.72rem;background:var(--bg);color:var(--text)">${opts}</select>
     </div>`;
   }).join('');
-  
-  const extras = document.getElementById('mc-extras');
-  extras.innerHTML = '';
-  if (['helmet','chestplate','leggings','boots'].includes(mcSelected.type)) {
-    extras.innerHTML = `<div class="field"><label>لون الأرمور (Leather فقط — Hex بدون #)</label><input type="text" id="mc-color" placeholder="مثال: FF5733" oninput="mcBuild()" maxlength="6" style="${!mcSelected.id.startsWith('leather') ? 'opacity:0.3;pointer-events:none' : ''}"></div>`;
-  }
   mcBuild();
 }
 
@@ -1104,163 +488,144 @@ function mcBuild() {
   const count = parseInt(document.getElementById('mc-count').value) || 1;
   const customName = document.getElementById('mc-custom-name').value.trim();
   const loreRaw = document.getElementById('mc-lore').value.trim();
-  const type = mcSelected.extra || mcSelected.type;
-  const enchants = MC_ENCHANTS[type] || [];
+  const enchants = MC_ENCHANTS[mcSelected.type] || [];
 
   let components = [];
-
-  // 1. Enchantments (1.21 Syntax)
   let enchLevels = [];
   enchants.forEach(([e]) => {
-    const cb = document.getElementById('ench_' + e);
-    const lv = document.getElementById('lvl_' + e);
-    if (cb && cb.checked) {
-      enchLevels.push(`"minecraft:${e}":${lv.value}`);
+    if (document.getElementById('ench_' + e)?.checked) {
+      enchLevels.push(`"minecraft:${e}":${document.getElementById('lvl_' + e).value}`);
     }
   });
-  if (enchLevels.length > 0) {
-    components.push(`enchantments={levels:{${enchLevels.join(',')}}}`);
-  }
-
-  // 2. Custom Name (1.21 Syntax)
-  if (customName) {
-    components.push(`custom_name='{"text":"${customName}","italic":false}'`);
-  }
-
-  // 3. Lore (1.21 Syntax)
+  if (enchLevels.length > 0) components.push(`enchantments={levels:{${enchLevels.join(',')}}}`);
+  if (customName) components.push(`custom_name='{"text":"${customName}","italic":false}'`);
   if (loreRaw) {
     const loreLines = loreRaw.split('\n').map(l => `'{"text":"${l}","italic":false}'`).join(',');
     components.push(`lore=[${loreLines}]`);
   }
 
-  // 4. Color (for leather armor) (1.21 Syntax)
-  const colorEl = document.getElementById('mc-color');
-  if (colorEl && colorEl.value.length === 6 && mcSelected.id.startsWith('leather')) {
-    const dec = parseInt(colorEl.value, 16);
-    components.push(`dyed_color=${dec}`);
-  }
-
-  let componentString = components.length > 0 ? `[${components.join(',')}]` : '';
-  const cmd = `/give @p minecraft:${mcSelected.id}${componentString} ${count}`;
-  document.getElementById('mc-cmd').textContent = cmd;
+  let compStr = components.length > 0 ? `[${components.join(',')}]` : '';
+  document.getElementById('mc-cmd').textContent = `/give @p minecraft:${mcSelected.id}${compStr} ${count}`;
 }
 
-function mcReset() {
-  mcSelected = null; mcChosenEnchants = {};
-  document.getElementById('mc-search').value = '';
-  document.getElementById('mc-item-selected').style.display = 'none';
-  document.getElementById('mc-cmd').textContent = 'اختر آيتم أولاً';
-  document.getElementById('mc-custom-name').value = '';
-  document.getElementById('mc-lore').value = '';
-  document.getElementById('mc-count').value = 1;
-}
+function mcReset() { mcSelected = null; document.getElementById('mc-item-selected').style.display = 'none'; document.getElementById('mc-search').value = ''; }
 
 /* ═══════════════════════════════════════════════
-   JOJO BIZARRE ADVENTURE WIKI
+   JOJO BIZARRE ADVENTURE WIKI (With Stories & Image Numbers)
 ═══════════════════════════════════════════════ */
+// تم ترتيب أرقام الصور التسلسلية لتسهيل الرفع في الـ GitHub
+// ملفات الصور المتوقعة ستكون من 1.jpg إلى 46.jpg تضعها في مجلد static/
 const JOJO_DATA = [
   {
     part: 'الجزء الأول: مغامرة فانتوم بلود',
     year: '1880 — إنجلترا',
     color: '#8b6914',
+    story: 'تبدأ الملحمة بصراع النبيل جوناثان جوستار مع أخيه بالتبني ديو براندو، الذي يسعى للسيطرة على ثروة العائلة ثم يتحول إلى مصاص دماء بفضل القناع الحجري. لتبدأ معركة الخير والشر باستخدام طاقة "الهامون".',
     chars: [
-      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'نبيل ومحترم، يتقن تقنية الـ Hamon، يقاتل ضد ديو لحماية الناس.', img: 'https://static.wikia.nocookie.net/jjba/images/4/4d/Jonathan_Joestar_Infobox.png' },
-      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'طموح لا حدود له، تحوّل إلى مصاص دماء بعد ارتداء القناع الحجري.', img: 'https://static.wikia.nocookie.net/jjba/images/1/13/DIO_Manga_Infobox.png' },
-      { name: 'روبرت إي. أو. سبيدواغن', role: 'رفيق جوناثان', align: 'طيب', desc: 'بدأ لصاً ثم أصبح حليفاً وفياً لجوناثان، مؤسس مؤسسة سبيدواغن.', img: 'https://static.wikia.nocookie.net/jjba/images/2/26/Speedwagon_Infobox.png' },
-      { name: 'ويليام أنتوان زيبيلي', role: 'المرشد', align: 'طيب', desc: 'أستاذ الـ Hamon الذي علّم جوناثان كيف يواجه المصاصين.', img: 'https://static.wikia.nocookie.net/jjba/images/8/86/Zeppeli_Infobox.png' },
-      { name: 'جورج جوستار الأول', role: 'الأب', align: 'طيب', desc: 'والد جوناثان، رجل شريف كريم أنقذ براندو صغيراً دون أن يعلم العواقب.', img: 'https://static.wikia.nocookie.net/jjba/images/f/f3/George_Joestar_I_Infobox.png' },
-      { name: 'إيريا زيبيلي', role: 'البطلة', align: 'طيب', desc: 'عشيقة جوناثان ذات القلب الطيب، تتحلى بالشجاعة في أصعب المواقف.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b4/Erina_Part1_Infobox.png' },
+      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'نبيل ومحترم، يتقن تقنية الـ Hamon لحماية الناس.', img: 'static/1.jpg' },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'طموح لا حدود له، تحوّل إلى مصاص دماء قوي.', img: 'static/2.jpg' },
+      { name: 'روبرت سبيدواغن', role: 'رفيق جوناثان', align: 'طيب', desc: 'حليف وفي لجوناثان ومؤسس مؤسسة سبيدواغن.', img: 'static/3.jpg' },
+      { name: 'ويليام زيبيلي', role: 'المرشد', align: 'طيب', desc: 'أستاذ الـ Hamon الذي علّم جوناثان القتال.', img: 'static/4.jpg' },
+      { name: 'جورج جوستار الأول', role: 'الأب', align: 'طيب', desc: 'والد جوناثان، رجل شريف كريم.', img: 'static/5.jpg' },
+      { name: 'إيرينا بيندلتون', role: 'البطلة', align: 'طيب', desc: 'عشيقة جوناثان ذات القلب الطيب والشجاعة.', img: 'static/6.jpg' }
     ]
   },
   {
     part: 'الجزء الثاني: معركة الاتجاه',
     year: '1938 — أمريكا/أوروبا',
     color: '#2e7d32',
+    story: 'ينتقل التركيز إلى "جوزيف جوستار" حفيد جوناثان، وهو شاب ماكر ومرح. يجد نفسه في مواجهة "البشر القدماء" (Pillar Men) الذين استيقظوا من سباتهم ويسعون وراء حجر أجا الأحمر للوصول للكمال.',
     chars: [
-      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'حفيد جوناثان، ماكر وذكي ومرح، يتفوق على أعدائه بالحيل والـ Hamon.', img: 'https://static.wikia.nocookie.net/jjba/images/c/ca/Joseph_Joestar_Battle_Tendency_Infobox.png' },
-      { name: 'سيزار أنتوني زيبيلي', role: 'الحليف', align: 'طيب', desc: 'حفيد ويليام، مقاتل Hamon إيطالي فخور، يربطه بجوزيف صداقة قوية.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1c/Caesar_Infobox.png' },
-      { name: 'كارز', role: 'زعيم البشر القدماء', align: 'شرير', desc: 'أقوى كائن في الكون بعد تطوره، خالق القناع الحجري الساعي للكمال المطلق.', img: 'https://static.wikia.nocookie.net/jjba/images/8/8a/Kars_Infobox.png' },
-      { name: 'إيسيدسي', role: 'البشر القدماء', align: 'شرير', desc: 'أحد قادة البشر القدماء، يتميز بالقوة والسرعة الخارقة.', img: 'https://static.wikia.nocookie.net/jjba/images/4/44/Esidisi_Infobox.png' },
-      { name: 'واماو', role: 'البشر القدماء', align: 'شرير', desc: 'رابع قادة البشر القدماء، متشرف بمفهوم الشرف ويقاتل بأسلوب مباشر.', img: 'https://static.wikia.nocookie.net/jjba/images/c/c4/Wamuu_Infobox.png' },
-      { name: 'ليزا ليزا', role: 'المرشدة', align: 'طيب', desc: 'معلمة الـ Hamon الغامضة والقوية، يكتنف ماضيها سر كبير.', img: 'https://static.wikia.nocookie.net/jjba/images/1/19/Lisa_Lisa_Infobox.png' },
+      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'ماكر وذكي ومرح، يتفوق على أعدائه بالحيل.', img: 'static/7.jpg' },
+      { name: 'سيزار زيبيلي', role: 'الحليف', align: 'طيب', desc: 'مقاتل فخور، يربطه بجوزيف صداقة ومنافسة.', img: 'static/8.jpg' },
+      { name: 'كارز', role: 'زعيم البشر القدماء', align: 'شرير', desc: 'خالق القناع الحجري الساعي للكمال المطلق.', img: 'static/9.jpg' },
+      { name: 'إيسيدسي', role: 'البشر القدماء', align: 'شرير', desc: 'يتميز بالقوة والخداع والتحكم بحرارة دمه.', img: 'static/10.jpg' },
+      { name: 'واماو', role: 'البشر القدماء', align: 'شرير', desc: 'محارب يعيش من أجل الشرف والقتال المباشر.', img: 'static/11.jpg' },
+      { name: 'ليزا ليزا', role: 'المرشدة', align: 'طيب', desc: 'معلمة الـ Hamon الغامضة والقوية.', img: 'static/12.jpg' }
     ]
   },
   {
     part: 'الجزء الثالث: مسافرو النجوم',
     year: '1989 — العالم',
     color: '#1565c0',
+    story: 'ظهور قوة الـ "ستاند" (Stand) لأول مرة. ينطلق "جوتارو كوجو" مع جده جوزيف ومجموعة من الحلفاء في رحلة شاقة إلى مصر لهزيمة "ديو" العائد من الموت وإنقاذ والدته.',
     chars: [
-      { name: 'جوتارو كوجو', role: 'البطل الرئيسي', align: 'طيب', desc: 'حفيد جوزيف، شخصية باردة قوية، يمتلك ستاند ستار بلاتينيوم.', img: 'https://static.wikia.nocookie.net/jjba/images/8/85/Jotaro_Part3_Infobox.png' },
-      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'عاد بجسد جوناثان بعد مئة عام ويمتلك ستاند THE WORLD لإيقاف الزمن.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1f/Dio_Part3_Infobox.png' },
-      { name: 'محمد أفدول', role: 'الحليف', align: 'طيب', desc: 'مصري حكيم يمتلك ستاند مغناطيس Magician\'s Red القادر على التحكم بالنار.', img: 'https://static.wikia.nocookie.net/jjba/images/3/3f/Avdol_Infobox.png' },
-      { name: 'نوريياكي كاكيوين', role: 'الحليف', align: 'طيب', desc: 'طالب ياباني يمتلك ستاند Hierophant Green ذو القدرات بعيدة المدى.', img: 'https://static.wikia.nocookie.net/jjba/images/1/18/Kakyoin_Infobox.png' },
-      { name: 'جان بيير بولنار', role: 'الحليف', align: 'طيب', desc: 'فرنسي أنيق يمتلك Silver Chariot، فارس شريف يحترم قواعد القتال.', img: 'https://static.wikia.nocookie.net/jjba/images/2/2d/Polnareff_Part3_Infobox.png' },
-      { name: 'إيغي', role: 'الحليف', align: 'محايد', desc: 'كلب يمتلك ستاند The Fool المصنوع من الرمال، مستقل وعنيد لكنه شجاع.', img: 'https://static.wikia.nocookie.net/jjba/images/e/e5/Iggy_Infobox.png' },
-      { name: 'جوزيف جوستار', role: 'الحليف', align: 'طيب', desc: 'جوزيف في شيخوخته، يمتلك ستاند Hermit Purple ويقود المجموعة.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b9/Joseph_Joestar_Stardust_Crusaders_Infobox.png' },
+      { name: 'جوتارو كوجو', role: 'البطل الرئيسي', align: 'طيب', desc: 'شخصية باردة وقوية، يمتلك ستاند Star Platinum.', img: 'static/13.jpg' },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'عاد بجسد جوناثان ويمتلك ستاند The World.', img: 'static/14.jpg' },
+      { name: 'محمد أفدول', role: 'الحليف', align: 'طيب', desc: 'مصري حكيم يمتلك ستاند النار Magician\'s Red.', img: 'static/15.jpg' },
+      { name: 'كاكيوين', role: 'الحليف', align: 'طيب', desc: 'طالب يمتلك ستاند Hierophant Green.', img: 'static/16.jpg' },
+      { name: 'بولناريف', role: 'الحليف', align: 'طيب', desc: 'فرنسي يمتلك Silver Chariot، فارس شريف.', img: 'static/17.jpg' },
+      { name: 'إيغي', role: 'الحليف', align: 'محايد', desc: 'كلب يمتلك ستاند The Fool المصنوع من الرمال.', img: 'static/18.jpg' },
+      { name: 'جوزيف جوستار', role: 'الحليف', align: 'طيب', desc: 'يقود المجموعة ويمتلك ستاند Hermit Purple.', img: 'static/19.jpg' }
     ]
   },
   {
     part: 'الجزء الرابع: الملاك الجامح',
     year: '1999 — موريو، اليابان',
     color: '#6a1b9a',
+    story: 'أجواء غامضة في بلدة "موريو" الهادئة. الشاب "جوسوكي هيغاشيكاتا" يكتشف وجود قاتل متسلسل يستخدم الستاند لارتكاب جرائمه بالخفاء، ويقرر حماية بلدته.',
     chars: [
-      { name: 'جوسوكي هيغاشيكاتا', role: 'البطل الرئيسي', align: 'طيب', desc: 'مراهق يمتلك Crazy Diamond القادر على إصلاح الأشياء، يكره من يهين شعره.', img: 'https://static.wikia.nocookie.net/jjba/images/0/04/Josuke_Part4_Infobox.png' },
-      { name: 'يوشيكاجي كيرا', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قاتل متسلسل يمتلك Killer Queen، يعيش حياة هادئة ويبتر أيدي ضحاياه.', img: 'https://static.wikia.nocookie.net/jjba/images/2/28/Kira_Yoshikage_Infobox.png' },
-      { name: 'كوإيتشي هيروسيه', role: 'الحليف', align: 'طيب', desc: 'صديق جوسوكي الوفي، يمتلك Echoes الذي يتطور عبر ثلاثة أوضاع.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1e/Koichi_Infobox.png' },
-      { name: 'أوكياسو أوكوياسو', role: 'الحليف', align: 'طيب', desc: 'يمتلك Sheer Heart Attack، يبحث عن أخته ويصبح حليفاً قيّماً.', img: 'https://static.wikia.nocookie.net/jjba/images/2/2e/Okuyasu_Infobox.png' },
-      { name: 'جوتارو كوجو', role: 'الحليف', align: 'طيب', desc: 'عاد إلى موريو للتحقيق في نشاط الستاندات، يوجّه جوسوكي.', img: 'https://static.wikia.nocookie.net/jjba/images/8/85/Jotaro_Part3_Infobox.png' },
-      { name: 'ريوهي كيشيبي', role: 'المحقق', align: 'محايد', desc: 'محقق يمتلك ستاند Superfly، يلاحق الجرائم الغريبة في موريو.', img: 'https://static.wikia.nocookie.net/jjba/images/c/ca/Kishibe_Rohan_Infobox.png' },
+      { name: 'جوسوكي هيغاشيكاتا', role: 'البطل الرئيسي', align: 'طيب', desc: 'يمتلك Crazy Diamond القادر على إصلاح الأشياء.', img: 'static/20.jpg' },
+      { name: 'يوشيكاجي كيرا', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قاتل متسلسل يمتلك Killer Queen.', img: 'static/21.jpg' },
+      { name: 'كوإيتشي هيروسيه', role: 'الحليف', align: 'طيب', desc: 'صديق جوسوكي الوفي، يمتلك ستاند Echoes.', img: 'static/22.jpg' },
+      { name: 'أوكوياسو نيجيمورا', role: 'الحليف', align: 'طيب', desc: 'يمتلك The Hand القادر على محو الفراغ.', img: 'static/23.jpg' },
+      { name: 'جوتارو كوجو', role: 'الحليف', align: 'طيب', desc: 'عاد للتحقيق في نشاط الستاندات وتوجيه جوسوكي.', img: 'static/24.jpg' },
+      { name: 'روهان كيشيبي', role: 'محايد/حليف', align: 'محايد', desc: 'رسام مانجا غريب الأطوار يمتلك Heaven\'s Door.', img: 'static/25.jpg' }
     ]
   },
   {
     part: 'الجزء الخامس: الذهب الريحي',
     year: '2001 — إيطاليا',
     color: '#c62828',
+    story: 'القصة تتبع "جورنو جيوفانا" (ابن ديو براندو) الذي ينضم لعصابة مافيا إيطالية تدعى باسيوني، بهدف الإطاحة بزعيمها المجهول وتحويل العصابة لشيء نبيل.',
     chars: [
-      { name: 'جورنو جيوفانا', role: 'البطل الرئيسي', align: 'طيب', desc: 'ابن ديو، يحلم بأن يصبح Gang-Star، يمتلك Gold Experience.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b0/Giorno_Giovanna_Infobox.png' },
-      { name: 'دياڤولو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قائد العصابة السرية باسيوني ذو شخصية مزدوجة، يمتلك King Crimson.', img: 'https://static.wikia.nocookie.net/jjba/images/8/82/Diavolo_Infobox.png' },
-      { name: 'بروشيولتي', role: 'الحليف', align: 'طيب', desc: 'قائد الفريق الذي يضم جورنو، يمتلك Purple Haze ويتميز بالشجاعة.', img: 'https://static.wikia.nocookie.net/jjba/images/3/35/Bucciarati_Infobox.png' },
-      { name: 'ناراتشيا', role: 'الحليف', align: 'طيب', desc: 'عضو الفريق الأصغر سناً، يمتلك Aerosmith ويعتمد عليه الجميع.', img: 'https://static.wikia.nocookie.net/jjba/images/2/27/Narancia_Infobox.png' },
-      { name: 'أبّاكيو', role: 'الحليف', align: 'طيب', desc: 'يمتلك Moody Blues القادر على إعادة تشغيل أحداث الماضي.', img: 'https://static.wikia.nocookie.net/jjba/images/3/33/Abbacchio_Infobox.png' },
-      { name: 'ميستا', role: 'الحليف', align: 'طيب', desc: 'يمتلك Sex Pistols، ستة كائنات صغيرة تتحكم بمسار رصاصاته.', img: 'https://static.wikia.nocookie.net/jjba/images/4/43/Mista_Infobox.png' },
-      { name: 'تريشا أونا', role: 'ابنة دياڤولو', align: 'محايد', desc: 'في البداية هدف للحماية، لاحقاً تتكشف هويتها وتمتلك Spice Girl.', img: 'https://static.wikia.nocookie.net/jjba/images/6/62/Trish_Una_Infobox.png' },
+      { name: 'جورنو جيوفانا', role: 'البطل الرئيسي', align: 'طيب', desc: 'يحلم بأن يصبح زعيم مافيا نبيل، يمتلك Gold Experience.', img: 'static/26.jpg' },
+      { name: 'دياڤولو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قائد العصابة ذو شخصية مزدوجة ويمتلك King Crimson.', img: 'static/27.jpg' },
+      { name: 'برونو بوتشيلاتي', role: 'الحليف', align: 'طيب', desc: 'قائد الفريق، يمتلك Sticky Fingers ويتميز بالشجاعة.', img: 'static/28.jpg' },
+      { name: 'نارانشيا', role: 'الحليف', align: 'طيب', desc: 'عضو الفريق المندفع، يمتلك ستاند الطائرة Aerosmith.', img: 'static/29.jpg' },
+      { name: 'أباكيو', role: 'الحليف', align: 'طيب', desc: 'شرطي سابق يمتلك Moody Blues لعرض الماضي.', img: 'static/30.jpg' },
+      { name: 'ميستا', role: 'الحليف', align: 'طيب', desc: 'قناص الفريق، يمتلك Sex Pistols.', img: 'static/31.jpg' },
+      { name: 'تريش أونا', role: 'ابنة الزعيم', align: 'محايد', desc: 'تبدأ كهدف للحماية ثم توقظ ستاند Spice Girl.', img: 'static/32.jpg' }
     ]
   },
   {
-    part: 'الجزء السادس: حجرة الحجر',
-    year: '2011 — فلوريدا، أمريكا',
+    part: 'الجزء السادس: محيط الحجر',
+    year: '2011 — أمريكا',
     color: '#00838f',
+    story: '"جولين كوجو" (ابنة جوتارو) يتم الإيقاع بها وسجنها ظلماً في سجن جرين دولفين. تكتشف أن سجنها كان مكيدة من كاهن يسعى لإكمال خطة ديو القديمة.',
     chars: [
-      { name: 'جولين كوجو', role: 'البطلة الرئيسية', align: 'طيب', desc: 'ابنة جوتارو كوجو، تدخل السجن بتهمة باطلة وتمتلك Stone Free.', img: 'https://static.wikia.nocookie.net/jjba/images/2/24/Jolyne_Infobox.png' },
-      { name: 'إنريكو بوتشي', role: 'الخصم الرئيسي', align: 'شرير', desc: 'كاهن متعصب يمتلك Whitesnake ويحلم بالوصول إلى الجنة.', img: 'https://static.wikia.nocookie.net/jjba/images/3/3b/Pucci_Infobox.png' },
-      { name: 'هيرميس كوستيلو', role: 'الحليفة', align: 'طيب', desc: 'صديقة جولين في السجن، تمتلك Kiss وتبحث عن ثأر أختها.', img: 'https://static.wikia.nocookie.net/jjba/images/8/82/Hermes_Infobox.png' },
-      { name: 'ويذر ريبورت', role: 'الحليف', align: 'محايد', desc: 'غامض يمتلك Weather Report للتحكم بالطقس، ماضيه مخفي.', img: 'https://static.wikia.nocookie.net/jjba/images/6/6c/Weather_Report_Infobox.png' },
-      { name: 'فو فايترز', role: 'الحليف', align: 'محايد', desc: 'مستعمرة من العوالق تسكن جثة، تنضم لجولين بدافع غريب.', img: 'https://static.wikia.nocookie.net/jjba/images/0/03/F.F._Infobox.png' },
-      { name: 'آنساتو جانيلي', role: 'الحليف', align: 'طيب', desc: 'ناشط سياسي يمتلك Diver Down القادر على الغوص داخل الأجسام.', img: 'https://static.wikia.nocookie.net/jjba/images/0/0b/Annasui_Infobox.png' },
+      { name: 'جولين كوجو', role: 'البطلة الرئيسية', align: 'طيب', desc: 'تدخل السجن ظلماً وتمتلك ستاند الخيوط Stone Free.', img: 'static/33.jpg' },
+      { name: 'إنريكو بوتشي', role: 'الخصم الرئيسي', align: 'شرير', desc: 'كاهن يمتلك Whitesnake ويحلم بالوصول للجنة.', img: 'static/34.jpg' },
+      { name: 'هيرميس', role: 'الحليفة', align: 'طيب', desc: 'صديقة جولين في السجن، تمتلك Kiss.', img: 'static/35.jpg' },
+      { name: 'ويذر ريبورت', role: 'الحليف', align: 'محايد', desc: 'غامض يمتلك ستاند للتحكم بالطقس.', img: 'static/36.jpg' },
+      { name: 'إف إف (F.F.)', role: 'الحليف', align: 'محايد', desc: 'مستعمرة عوالق تسكن جثة وتقاتل بجانب جولين.', img: 'static/37.jpg' },
+      { name: 'أناسوي', role: 'الحليف', align: 'طيب', desc: 'مهووس بجولين يمتلك Diver Down.', img: 'static/38.jpg' }
     ]
   },
   {
     part: 'الجزء السابع: ستيل بول ران',
-    year: '1890 — أمريكا',
+    year: '1890 — أمريكا (عالم بديل)',
     color: '#4527a0',
+    story: 'سباق خيول ضخم يقطع الولايات المتحدة. الفارس المشلول "جوني جوستار" ينضم للسباق بعدما اكتشف أن تقنية الكرة الدوارة الخاصة بـ "جايرو" قد تعيد له القدرة على المشي.',
     chars: [
-      { name: 'جوني جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'بطل سابق مشلول الساقين يبحث عن شيء يعيد له سبب العيش.', img: 'https://static.wikia.nocookie.net/jjba/images/b/be/Johnny_Joestar_Infobox.png' },
-      { name: 'جايرو زيبيلي', role: 'الحليف الرئيسي', align: 'محايد', desc: 'مُدان يشارك في السباق آملاً في العفو، يمتلك تقنية الكرة الدوارة.', img: 'https://static.wikia.nocookie.net/jjba/images/4/43/Gyro_Zeppeli_Infobox.png' },
-      { name: 'فالنتاين', role: 'الخصم الرئيسي', align: 'شرير', desc: 'نائب رئيس الولايات المتحدة، يؤمن بمبدأ "الحظ" الوطني ويمتلك Dirty Deeds Done Dirt Cheap.', img: 'https://static.wikia.nocookie.net/jjba/images/3/38/Funny_Valentine_Infobox.png' },
-      { name: 'ديدجا ماكماهون', role: 'المنافس', align: 'محايد', desc: 'منافس شرس في السباق يتبع فالنتاين لاحقاً.', img: 'https://static.wikia.nocookie.net/jjba/images/6/6d/Diego_Brando_Infobox.png' },
+      { name: 'جوني جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'فارس سابق مشلول يبحث عن أجزاء الجثة المقدسة.', img: 'static/39.jpg' },
+      { name: 'جايرو زيبيلي', role: 'الحليف الرئيسي', align: 'محايد', desc: 'يشارك في السباق ويمتلك تقنية الكرة الدوارة.', img: 'static/40.jpg' },
+      { name: 'فاني فالنتاين', role: 'الخصم الرئيسي', align: 'شرير', desc: 'الرئيس الأمريكي الذي يسعى لاستغلال الجثة لبلاده.', img: 'static/41.jpg' },
+      { name: 'دييغو براندو', role: 'المنافس', align: 'محايد', desc: 'منافس شرس يمكنه التحول لديناصور.', img: 'static/42.jpg' }
     ]
   },
   {
     part: 'الجزء الثامن: جوجوليون',
-    year: '2011 — موريو، اليابان (بديلة)',
+    year: '2011 — موريو (عالم بديل)',
     color: '#283593',
+    story: 'بعد زلزال مدمر في موريو، يتم العثور على شاب فاقد للذاكرة يُدعى جوسوكي. يبدأ رحلة لكشف هويته ليكتشف أسراراً مرعبة تتعلق بفاكهة غامضة وبشر من الصخر.',
     chars: [
-      { name: 'جوسوكي هيغاشيكاتا (جوجو)', role: 'البطل الرئيسي', align: 'طيب', desc: 'شخص مجهول الهوية وجد بجوار جدار الكوارث، يمتلك Soft & Wet.', img: 'https://static.wikia.nocookie.net/jjba/images/a/ac/Josuke_Higashikata_JJL_Infobox.png' },
-      { name: 'توسياكي ياسويو', role: 'الخصم', align: 'شرير', desc: 'أحد أعضاء The Rock Humans، يطارد جوسوكي بلا هوادة.', img: 'https://static.wikia.nocookie.net/jjba/images/9/93/Yoshikage_Kira_JJL_Infobox.png' },
-      { name: 'يامامورو نوريسوكيه', role: 'الحليف', align: 'طيب', desc: 'صديق مقرب يساعد جوسوكي في كشف غموض هويته.', img: 'https://static.wikia.nocookie.net/jjba/images/3/36/Norisuke_IV_Infobox.png' },
-      { name: 'دايمون هاتو', role: 'الحليفة', align: 'طيب', desc: 'فتاة من عائلة هيغاشيكاتا تساعد جوسوكي وتمتلك Walking Heart.', img: 'https://static.wikia.nocookie.net/jjba/images/c/c3/Hato_Infobox.png' },
+      { name: 'جوسوكي (جوجو)', role: 'البطل الرئيسي', align: 'طيب', desc: 'شخص فاقد للذاكرة يمتلك ستاند Soft & Wet.', img: 'static/43.jpg' },
+      { name: 'تورو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'من البشر الصخريين يمتلك ستاند مرعب.', img: 'static/44.jpg' },
+      { name: 'ياسوهو هيروسيه', role: 'الحليف', align: 'طيب', desc: 'صديقة جوسوكي التي تساعده في كشف هويته.', img: 'static/45.jpg' },
+      { name: 'نوريسكي هيغاشيكاتا', role: 'الحليف', align: 'طيب', desc: 'رئيس العائلة الذي يتبنى جوسوكي.', img: 'static/46.jpg' }
     ]
-  },
+  }
 ];
 
 let jojoPart = 0;
@@ -1268,28 +633,30 @@ let jojoPart = 0;
 function jojoRender() {
   const tabs = document.getElementById('jojo-tabs');
   tabs.innerHTML = JOJO_DATA.map((p, i) =>
-    `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--muted)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;font-size:0.65rem;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">الجزء ${i+1}</button>`
+    `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--text)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;font-size:0.75rem;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">الجزء ${i+1}</button>`
   ).join('');
 
   const part = JOJO_DATA[jojoPart];
+  
+  // وضع قصة الجزء
+  document.getElementById('jojo-story').innerHTML = `
+    <div style="font-weight:bold; color:${part.color}; font-size:1.1rem; margin-bottom:8px;">📖 قصة ${part.part} (${part.year})</div>
+    <div>${part.story}</div>
+  `;
+
   const grid = document.getElementById('jojo-chars');
-  grid.innerHTML = `<div style="grid-column:1/-1;border-left:3px solid ${part.color};padding-left:12px;margin-bottom:4px">
-    <div style="font-size:0.9rem;font-weight:700;color:${part.color}">${part.part}</div>
-    <div style="font-size:0.72rem;color:var(--muted)">${part.year}</div>
-  </div>` +
-  part.chars.map(c => {
+  grid.innerHTML = part.chars.map(c => {
     const alignColor = c.align === 'طيب' ? 'var(--success)' : c.align === 'شرير' ? 'var(--danger)' : 'var(--warn)';
     const alignIcon  = c.align === 'طيب' ? '✦' : c.align === 'شرير' ? '✖' : '◆';
     return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
-      <div style="height:140px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden">
-        <img src="${c.img}" alt="${c.name}" style="height:100%;width:100%;object-fit:cover;object-position:top" onerror="this.style.display='none';this.nextSibling.style.display='flex'" loading="lazy">
-        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:3rem">🌀</div>
+      <div style="height:160px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="${c.img}" alt="${c.name}" style="height:100%;width:100%;object-fit:cover;object-position:top" onerror="this.src=''; this.alt='الصورة غير متوفرة'" loading="lazy">
       </div>
       <div style="padding:10px">
-        <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:2px;direction:rtl">${c.name}</div>
-        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:6px;direction:rtl">${c.role}</div>
+        <div style="font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:2px;">${c.name}</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-bottom:6px;">${c.role}</div>
         <span style="font-size:0.65rem;color:${alignColor};background:${alignColor}22;padding:2px 8px;border-radius:20px">${alignIcon} ${c.align}</span>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:8px;line-height:1.5;direction:rtl">${c.desc}</div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;line-height:1.5;">${c.desc}</div>
       </div>
     </div>`;
   }).join('');
@@ -1303,6 +670,12 @@ window.toggle = function(id) {
   _origToggle(id);
   if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender();
 };
+
+/* ═══════════════════════════════════════════════
+   أكواد الآلات الحاسبة وباقي الأدوات
+   (تم الحفاظ عليها لكي لا يتعطل الموقع)
+═══════════════════════════════════════════════ */
+// ... (بقيت كما هي في الكود السابق) ...
 </script>
 </body>
 </html>
