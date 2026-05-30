@@ -47,7 +47,7 @@ body {
   opacity: 0; transition: opacity 0.5s ease;
 }
 
-/* إضافة فلتر داكن للخلفيات المخصصة عشان النص يبان */
+/*  اإضافة فلتر داكن للخلفيات المخصصة عشان النص يبان */
 #dynamic-bg::after {
   content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(10, 10, 15, 0.75);
