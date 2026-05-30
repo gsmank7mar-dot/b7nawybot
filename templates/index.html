@@ -33,7 +33,6 @@
     <button class="launch-btn" onclick="toggle('hash')" id="btn-hash"><span class="icon">🔐</span>ENCODE</button>
     <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🌀</span>JOJO</button>
     <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
-    <button class="launch-btn" onclick="toggle('tip')" id="btn-tip"><span class="icon">💰</span>TIP CALC</button>
     <button class="launch-btn" onclick="toggle('calc')" id="btn-calc2"><span class="icon">🧮</span>CALC</button>
     <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
     <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
@@ -449,6 +448,14 @@ document.addEventListener('keydown', function(event) {
     }
   }
 });
+
+// تشغيل الموسيقى عند أول ضغطة في أي مكان في الموقع
+document.addEventListener('click', function() {
+  const audio = document.getElementById('audio-player'); // تأكد أن ID المشغل عندك هو audio-player
+  if (audio && audio.paused) {
+    audio.play();
+  }
+}, { once: true }); // تعمل مرة واحدة فقط
   
   /* ═══════════════════════════════════════════════
    UTILITIES & THEME (NEW)
