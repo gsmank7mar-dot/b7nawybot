@@ -22,55 +22,23 @@
   </header>
 
   <div class="launcher">
-    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme">
-      <span class="icon">✨</span>THEME
-    </button>
-    <button class="launch-btn" onclick="toggle('calc')" id="btn-calc">
-      <span class="icon">🧮</span>CALC
-    </button>
-    <button class="launch-btn" onclick="toggle('pass')" id="btn-pass">
-      <span class="icon">🔑</span>PASSWORD
-    </button>
-    <button class="launch-btn" onclick="toggle('notes')" id="btn-notes">
-      <span class="icon">📝</span>NOTES
-    </button>
-    <button class="launch-btn" onclick="toggle('timer')" id="btn-timer">
-      <span class="icon">⏱️</span>TIMER
-    </button>
-    <button class="launch-btn" onclick="toggle('color')" id="btn-color">
-      <span class="icon">🎨</span>COLOR
-    </button>
-    <button class="launch-btn" onclick="toggle('unit')" id="btn-unit">
-      <span class="icon">📐</span>CONVERT
-    </button>
-    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi">
-      <span class="icon">💪</span>BMI
-    </button>
-    <button class="launch-btn" onclick="toggle('age')" id="btn-age">
-      <span class="icon">🎂</span>AGE
-    </button>
-    <button class="launch-btn" onclick="toggle('hash')" id="btn-hash">
-      <span class="icon">🔐</span>ENCODE
-    </button>
-    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin">
-      <span class="icon">🎲</span>RANDOM
-    </button>
-    <button class="launch-btn" onclick="toggle('word')" id="btn-word">
-      <span class="icon">✍️</span>WORDS
-    </button>
-    <button class="launch-btn" onclick="toggle('tip')" id="btn-tip">
-      <span class="icon">💰</span>TIP CALC
-    </button>
-    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc">
-      <span class="icon">⛏️</span>MINECRAFT
-    </button>
-    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo">
-      <span class="icon">🌀</span>JOJO
-    </button>
-    <button class="launch-btn" onclick="toggle('about')" id="btn-about">
-      <span class="icon">❓</span>ABOUT
-    </button>
-  </div>
+    <button class="launch-btn" onclick="toggle('calc')" id="btn-calc"><span class="icon">🧮</span>CALC</button>
+    <button class="launch-btn" onclick="toggle('timer')" id="btn-timer"><span class="icon">⏱️</span>TIMER</button>
+    <button class="launch-btn" onclick="toggle('notes')" id="btn-notes"><span class="icon">📝</span>NOTES</button>
+    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin"><span class="icon">🎲</span>RANDOM</button>
+    <button class="launch-btn" onclick="toggle('word')" id="btn-word"><span class="icon">✍️</span>WORDS</button>
+    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi"><span class="icon">💪</span>BMI</button>
+    <button class="launch-btn" onclick="toggle('unit')" id="btn-unit"><span class="icon">📐</span>CONVERT</button>
+    <button class="launch-btn" onclick="toggle('age')" id="btn-age"><span class="icon">🎂</span>AGE</button>
+    <button class="launch-btn" onclick="toggle('hash')" id="btn-hash"><span class="icon">🔐</span>ENCODE</button>
+    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🌀</span>JOJO</button>
+    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
+    <button class="launch-btn" onclick="toggle('tip')" id="btn-tip"><span class="icon">💰</span>TIP CALC</button>
+    <button class="launch-btn" onclick="toggle('calc')" id="btn-calc2"><span class="icon">🧮</span>CALC</button>
+    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
+    <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
+    <button class="launch-btn" onclick="toggle('about')" id="btn-about"><span class="icon">❓</span>ABOUT</button>
+</div>
 
   <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
     <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
@@ -471,7 +439,18 @@
 <audio id="audio" loop></audio>
 
 <script>
-/* ═══════════════════════════════════════════════
+
+// خاصية الإخفاء بضغطة H
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'h' || event.key === 'H') {
+    const launcher = document.querySelector('.launcher');
+    if (launcher) {
+      launcher.style.display = (launcher.style.display === 'none') ? 'flex' : 'none';
+    }
+  }
+});
+  
+  /* ═══════════════════════════════════════════════
    UTILITIES & THEME (NEW)
 ═══════════════════════════════════════════════ */
 function showToast(msg) {
