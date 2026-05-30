@@ -1,24 +1,39 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Sevenawy Cyber Dashboard</title>
+    <title>SEVENAWY</title>
 </head>
 <body>
-    <div class="header">
-        <h1>SEVENAWY - سفناوي</h1>
-        <p>البوابة الرقمية الموحدة للعمليات السيبرانية</p>
-    </div>
-
+    <div id="particles-js"></div>
+    <h1>SEVENAWY</h1>
+    
     <div class="card">
-        <h3>🚀 خدماتنا المتاحة</h3>
-        <ul>
-            <li>فحص المنافذ المتقدم</li>
-            <li>تحليل سجلات الـ OSINT</li>
-            <li>التحقق الأمني من الروابط</li>
-        </ul>
+        <button onclick="show('calc')">Calculator</button>
+        <button onclick="show('pass')">Password Gen</button>
     </div>
 
-    <footer>نظام مطور بواسطة B7 - المساعد السيبراني 2026</footer>
+    <div id="calc" class="card hidden">
+        <h3>Calculator</h3>
+        <input type="number" id="n1"> <input type="number" id="n2">
+        <button onclick="calc()">Calculate</button>
+        <p id="res"></p>
+    </div>
+
+    <div id="pass" class="card hidden">
+        <h3>Password Generator</h3>
+        <button onclick="genPass()">Generate</button>
+        <p id="p-res"></p>
+    </div>
+
+    <footer style="position:fixed; bottom:10px; right:10px;">B7</footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS.load('particles-js', 'https://particles.js.org/assets/particles.json');
+        function show(id) { document.querySelectorAll('.card').forEach(c => c.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+        function calc() { let r = parseFloat(document.getElementById('n1').value) / parseFloat(document.getElementById('n2').value) * 100; document.getElementById('res').innerText = r.toFixed(2) + '%'; }
+        function genPass() { document.getElementById('p-res').innerText = Math.random().toString(36).slice(-10); }
+    </script>
 </body>
 </html>
