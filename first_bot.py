@@ -36,6 +36,19 @@ async def scan(interaction: discord.Interaction, target_ip: str):
 async def osint(interaction: discord.Interaction, domain: str):
     await interaction.response.send_message(f"جاري جلب بيانات `{domain}`...")
 
+# حذف الرسائل بعدد معين
+@bot.tree.command(name="clear", description="حذف عدد معين من الرسائل")
+@app_commands.checks.has_permissions(manage_messages=True)
+async def clear(interaction: discord.Interaction, amount: int):
+    await interaction.channel.purge(limit=amount)
+    await interaction.response.send_message(f"✅ تم حذف {amount} رسالة.", ephemeral=True)
+
+# حاسبة النسبة المئوية
+@bot.tree.command(name="calc", description="حساب النسبة المئوية: كم X من Y؟")
+async def calc(interaction: discord.Interaction, part: float, total: float):
+    percentage = (part / total) * 100
+    await interaction.response.send_message(f"📊 النسبة هي: {percentage:.2f}%")
+
 # تشغيل النظامين معاً
 if __name__ == "__main__":
     t = Thread(target=run_web)
