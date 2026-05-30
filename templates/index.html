@@ -17,7 +17,7 @@
 <div class="app">
 
   <!-- Header -->
-  <header class="site-header">
+  <header class="site-header" id="top">
     <h1>SEVENAWY</h1>
     <p><span class="status-dot"></span>ALL SYSTEMS ONLINE · TOOLS READY</p>
   </header>
@@ -59,6 +59,13 @@
     </button>
     <button class="launch-btn" onclick="toggle('tip')" id="btn-tip">
       <span class="icon">💰</span>TIP CALC
+    </button>
+  </div>
+
+  <!-- Close All Button -->
+  <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
+    <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
+      ✕ &nbsp;CLOSE ALL &nbsp;·&nbsp; GO TO TOP
     </button>
   </div>
 
@@ -335,21 +342,33 @@
   </div><!-- end #tools -->
 </div><!-- end .app -->
 
-<!-- Lofi Player -->
-<div class="player" id="lofi-player">
-  <button class="player-btn mini" id="prev-btn" onclick="prevTrack()" title="Previous">◀</button>
-  <button class="player-btn" id="play-btn" onclick="togglePlay()">▶</button>
-  <div class="player-info">
-    <div class="player-title" id="track-name">lofi hip hop ~ chill beats</div>
-    <div class="player-sub" id="track-sub">
-      <span class="eq-dot" id="eq1"></span>
-      <span class="eq-dot" id="eq2"></span>
-      <span class="eq-dot" id="eq3"></span>
-      <span style="margin-left:4px">Ready to play</span>
+<!-- Lofi Player — collapsed by default, toggle with music pill -->
+<div class="player-wrap" id="player-wrap">
+
+  <!-- Mini pill (always visible) -->
+  <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
+    <span id="pill-eq" class="pill-eq">
+      <span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span>
+    </span>
+    <span id="pill-label">♫ LOFI</span>
+    <span class="pill-chevron" id="pill-chev">▲</span>
+  </button>
+
+  <!-- Full player (hidden by default) -->
+  <div class="player" id="lofi-player" style="display:none;">
+    <button class="player-btn mini" onclick="prevTrack()" title="Previous">◀</button>
+    <button class="player-btn" id="play-btn" onclick="togglePlay()">▶</button>
+    <div class="player-info">
+      <div class="player-title" id="track-name">lofi hip hop ~ chill beats</div>
+      <div class="player-sub" id="track-sub">
+        <span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span>
+        <span style="margin-left:4px">Ready to play</span>
+      </div>
     </div>
+    <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
+    <button class="player-btn mini" onclick="nextTrack()" title="Next">▶</button>
   </div>
-  <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
-  <button class="player-btn mini" id="next-btn" onclick="nextTrack()" title="Next">▶</button>
+
 </div>
 
 <!-- Audio element -->
@@ -428,12 +447,39 @@
 /* ═══════════════════════════════════════════════
    TOOL TOGGLE
 ═══════════════════════════════════════════════ */
+const toolIds = ['calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','tip'];
+
+function updateCollapseBar() {
+  const anyOpen = toolIds.some(id => !document.getElementById(id).classList.contains('hidden'));
+  document.getElementById('collapse-bar').style.display = anyOpen ? 'block' : 'none';
+}
+
+function collapseAll() {
+  toolIds.forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+    document.getElementById('btn-' + id).classList.remove('active');
+  });
+  updateCollapseBar();
+  document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
+}
+
+function togglePlayer() {
+  const player = document.getElementById('lofi-player');
+  const chev = document.getElementById('pill-chev');
+  const wrap = document.getElementById('player-wrap');
+  const open = player.style.display === 'none' || player.style.display === '';
+  player.style.display = open ? 'flex' : 'none';
+  chev.textContent = open ? '▼' : '▲';
+  wrap.classList.toggle('player-open', open);
+}
+
 function toggle(id) {
   const card = document.getElementById(id);
   const btn = document.getElementById('btn-' + id);
   const hidden = card.classList.contains('hidden');
   card.classList.toggle('hidden');
   btn.classList.toggle('active', hidden);
+  updateCollapseBar();
   if (hidden) {
     card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     if (id === 'notes') loadNote();
