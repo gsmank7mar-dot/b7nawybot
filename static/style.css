@@ -1,0 +1,4 @@
+body.dark-mode { background-color: #121212; color: white; }
+body.light-mode { background-color: #f4f4f4; color: black; }
+h1 { font-size: 3em; text-align: center; }
+footer { position: fixed; bottom: 10px; right: 10px; font-size: 0.8em; color: gray; }

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Sevenawy Cyber</title>
+</head>
+<body class="light-mode">
+    <button onclick="toggleTheme()">تبديل الوضع</button>
+    <h1>SEVENAWY - سفناوي</h1>
+    <div class="services">
+        <h2>خدماتنا السيبرانية</h2>
+        <p>نقدم فحص المنافذ، OSINT، وتحليل الروابط.</p>
+    </div>
+    <footer>صنع بواسطة B7</footer>
+</body>
+<script>
+    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
+</script>
+</html>
