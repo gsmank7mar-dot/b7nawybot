@@ -8,21 +8,17 @@
 </head>
 <body>
 
-<!-- Animated canvas background -->
 <canvas id="bg-canvas"></canvas>
 
-<!-- Toast notification -->
 <div class="toast" id="toast"></div>
 
 <div class="app">
 
-  <!-- Header -->
   <header class="site-header" id="top">
     <h1>SEVENAWY</h1>
     <p><span class="status-dot"></span>ALL SYSTEMS ONLINE · TOOLS READY</p>
   </header>
 
-  <!-- Tool Launcher -->
   <div class="launcher">
     <button class="launch-btn" onclick="toggle('calc')" id="btn-calc">
       <span class="icon">🧮</span>CALC
@@ -60,19 +56,25 @@
     <button class="launch-btn" onclick="toggle('tip')" id="btn-tip">
       <span class="icon">💰</span>TIP CALC
     </button>
+    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc">
+      <span class="icon">⛏️</span>MINECRAFT
+    </button>
+    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo">
+      <span class="icon">🌀</span>JOJO
+    </button>
+    <button class="launch-btn" onclick="toggle('about')" id="btn-about">
+      <span class="icon">❓</span>ABOUT
+    </button>
   </div>
 
-  <!-- Close All Button -->
   <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
     <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
       ✕ &nbsp;CLOSE ALL &nbsp;·&nbsp; GO TO TOP
     </button>
   </div>
 
-  <!-- Tools Container -->
   <div id="tools">
 
-    <!-- ── CALCULATOR ── -->
     <div id="calc" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Calculator</span>
@@ -105,7 +107,6 @@
       </div>
     </div>
 
-    <!-- ── PASSWORD GEN ── -->
     <div id="pass" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Password Generator</span>
@@ -127,7 +128,6 @@
       </div>
     </div>
 
-    <!-- ── NOTES ── -->
     <div id="notes" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Quick Notes</span>
@@ -143,7 +143,6 @@
       </div>
     </div>
 
-    <!-- ── TIMER ── -->
     <div id="timer" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Timer / Stopwatch</span>
@@ -167,7 +166,6 @@
       </div>
     </div>
 
-    <!-- ── COLOR PICKER ── -->
     <div id="color" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Color Tools</span>
@@ -186,7 +184,6 @@
       <p style="font-size:0.72rem;color:var(--muted);margin-top:12px">Click any value to copy it</p>
     </div>
 
-    <!-- ── UNIT CONVERTER ── -->
     <div id="unit" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Unit Converter</span>
@@ -218,7 +215,6 @@
       <div class="output" id="unit-out">—</div>
     </div>
 
-    <!-- ── BMI ── -->
     <div id="bmi" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">BMI Calculator</span>
@@ -235,7 +231,6 @@
       <div class="output" id="bmi-out">Enter your weight and height</div>
     </div>
 
-    <!-- ── AGE CALCULATOR ── -->
     <div id="age" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Age Calculator</span>
@@ -245,7 +240,6 @@
       <div class="output" id="age-out">Select your birthday above</div>
     </div>
 
-    <!-- ── ENCODE/DECODE ── -->
     <div id="hash" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Encode / Decode</span>
@@ -269,7 +263,6 @@
       <div class="output" id="enc-out">Result will appear here</div>
     </div>
 
-    <!-- ── RANDOM / COIN ── -->
     <div id="coin" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Randomizer</span>
@@ -288,7 +281,6 @@
       <div class="output" id="rnd-out">Press a button!</div>
     </div>
 
-    <!-- ── WORD COUNTER ── -->
     <div id="word" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Word & Text Tools</span>
@@ -322,7 +314,6 @@
       </div>
     </div>
 
-    <!-- ── TIP CALCULATOR ── -->
     <div id="tip" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Tip Calculator</span>
@@ -339,13 +330,84 @@
       <div class="output" id="tip-out">Enter bill amount</div>
     </div>
 
-  </div><!-- end #tools -->
-</div><!-- end .app -->
+    <div id="mc" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">⛏️ Minecraft Command Builder (1.21+)</span>
+        <button class="close-btn" onclick="toggle('mc')">✕</button>
+      </div>
+      <div class="field">
+        <label>ابحث عن الآيتم</label>
+        <input type="text" id="mc-search" placeholder="مثال: sword, bow, helmet..." oninput="mcFilter()" autocomplete="off">
+        <div id="mc-suggestions" style="display:none; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-top:4px; max-height:180px; overflow-y:auto;"></div>
+      </div>
+      <div id="mc-item-selected" style="display:none">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <span id="mc-item-icon" style="font-size:2rem"></span>
+          <div><div id="mc-item-name" style="font-weight:700;color:var(--accent)"></div><div id="mc-item-id" style="font-size:0.72rem;color:var(--muted)"></div></div>
+        </div>
+        <div class="field">
+          <label>الـ Enchantments المتاحة</label>
+          <div id="mc-enchants" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;"></div>
+        </div>
+        <div id="mc-extras" style="margin-top:4px"></div>
+        <div class="field" style="margin-top:12px">
+          <label>اسم مخصص للآيتم (اختياري)</label>
+          <input type="text" id="mc-custom-name" placeholder="اكتب اسم..." oninput="mcBuild()">
+        </div>
+        <div class="field">
+          <label>Lore (وصف — سطر لكل줄)</label>
+          <textarea id="mc-lore" placeholder="مثال: سيف الأبطال&#10;مصنوع من الفولاذ" rows="3" oninput="mcBuild()"></textarea>
+        </div>
+        <div class="field">
+          <label>الكمية</label>
+          <input type="number" id="mc-count" value="1" min="1" max="64" oninput="mcBuild()">
+        </div>
+        <div class="output" id="mc-cmd" style="font-size:0.75rem; word-break:break-all; cursor:pointer; color: #fff;" onclick="copyText('mc-cmd')" title="اضغط للنسخ">اختر آيتم أولاً</div>
+        <div class="btn-row">
+          <button class="btn" onclick="copyText('mc-cmd')">📋 نسخ الكوماند</button>
+          <button class="btn secondary" onclick="mcReset()">↺ إعادة</button>
+        </div>
+      </div>
+    </div>
 
-<!-- Lofi Player — collapsed by default, toggle with music pill -->
-<div class="player-wrap" id="player-wrap">
+    <div id="jojo" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">🌀 موسوعة JoJo's Bizarre Adventure</span>
+        <button class="close-btn" onclick="toggle('jojo')">✕</button>
+      </div>
+      <div id="jojo-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
+      <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;"></div>
+    </div>
 
-  <!-- Mini pill (always visible) -->
+    <div id="about" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">❓ عن الموقع</span>
+        <button class="close-btn" onclick="toggle('about')">✕</button>
+      </div>
+      <div style="text-align:center;padding:16px 0">
+        <div style="font-size:3rem;margin-bottom:12px">🤖</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:0.1em;margin-bottom:6px">SEVENAWY</div>
+        <div style="color:var(--muted);font-size:0.8rem;line-height:1.8;margin-bottom:20px; direction: rtl;">
+          حياك! هذا موقعي أنا<br>
+          <span style="color:var(--text)">بوت + موقع سفناوي خاص بالمساعدة</span><br>
+          مشروع بسيط من صنعي
+        </div>
+        <div style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 24px;margin-bottom:20px">
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;letter-spacing:0.1em">MADE BY</div>
+          <div style="font-size:1.3rem;font-weight:700;color:var(--accent2)">B7</div>
+        </div>
+        <div style="margin-top:4px">
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:0.08em">تواصل معي على Discord</div>
+          <button class="btn" onclick="navigator.clipboard.writeText('b7_707').then(()=>showToast('✅ تم نسخ اليوزر!'))" style="font-size:0.9rem;padding:12px 28px;letter-spacing:0.05em">
+            📋 b7_707
+          </button>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:8px">اضغط لنسخ اليوزر</div>
+        </div>
+      </div>
+    </div>
+
+  </div></div><div class="player-wrap" id="player-wrap">
+
   <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
     <span id="pill-eq" class="pill-eq">
       <span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span>
@@ -354,7 +416,6 @@
     <span class="pill-chevron" id="pill-chev">▲</span>
   </button>
 
-  <!-- Full player (hidden by default) -->
   <div class="player" id="lofi-player" style="display:none;">
     <button class="player-btn mini" onclick="prevTrack()" title="Previous">◀</button>
     <button class="player-btn" id="play-btn" onclick="togglePlay()">▶</button>
@@ -371,10 +432,25 @@
 
 </div>
 
-<!-- Audio element -->
 <audio id="audio" loop></audio>
 
 <script>
+/* ═══════════════════════════════════════════════
+   UTILITIES
+═══════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function copyText(id, isInput=false) {
+  const el = document.getElementById(id);
+  const text = isInput ? el.value : el.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+}
+
 /* ═══════════════════════════════════════════════
    CANVAS PARTICLE BACKGROUND
 ═══════════════════════════════════════════════ */
@@ -447,7 +523,7 @@
 /* ═══════════════════════════════════════════════
    TOOL TOGGLE
 ═══════════════════════════════════════════════ */
-const toolIds = ['calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','tip'];
+const toolIds = ['calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','tip','mc','jojo','about'];
 
 function updateCollapseBar() {
   const anyOpen = toolIds.some(id => !document.getElementById(id).classList.contains('hidden'));
@@ -834,9 +910,8 @@ function calcTip() {
 /* ═══════════════════════════════════════════════
    LOFI PLAYER
 ═══════════════════════════════════════════════ */
-// Using royalty-free lofi streams from public sources
 const tracks = [
-  { name: 'lofi hip hop ~ chill beats', sub: '☕ lofi', url: '/static/lofi1.mp3' },
+  { name: 'lofi hip hop ~ chill beats', sub: '☕ study mode', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
   { name: 'midnight vibes', sub: '🌙 late night coding', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
   { name: 'rainy cafe lofi', sub: '🌧 cozy sounds', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
   { name: 'dreamy lo-fi', sub: '✨ chill session', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
@@ -878,25 +953,356 @@ function prevTrack() {
   if (isPlaying) audio.play();
 }
 
-function setVol(v) { audio.volume = v; }
+/* ═══════════════════════════════════════════════
+   MINECRAFT ENCHANT BUILDER (1.21 COMPONENTS)
+═══════════════════════════════════════════════ */
+const MC_ITEMS = [
+  // Swords
+  { id:'wooden_sword',    name:'Wooden Sword',    icon:'🗡️', type:'sword' },
+  { id:'stone_sword',     name:'Stone Sword',     icon:'🗡️', type:'sword' },
+  { id:'iron_sword',      name:'Iron Sword',      icon:'⚔️', type:'sword' },
+  { id:'golden_sword',    name:'Golden Sword',    icon:'✨', type:'sword' },
+  { id:'diamond_sword',   name:'Diamond Sword',   icon:'💎', type:'sword' },
+  { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' },
+  // Axes
+  { id:'wooden_axe',    name:'Wooden Axe',    icon:'🪓', type:'axe' },
+  { id:'stone_axe',     name:'Stone Axe',     icon:'🪓', type:'axe' },
+  { id:'iron_axe',      name:'Iron Axe',      icon:'🪓', type:'axe' },
+  { id:'golden_axe',    name:'Golden Axe',    icon:'🪓', type:'axe' },
+  { id:'diamond_axe',   name:'Diamond Axe',   icon:'💎', type:'axe' },
+  { id:'netherite_axe', name:'Netherite Axe', icon:'🔥', type:'axe' },
+  // Pickaxes
+  { id:'wooden_pickaxe',    name:'Wooden Pickaxe',    icon:'⛏️', type:'pickaxe' },
+  { id:'stone_pickaxe',     name:'Stone Pickaxe',     icon:'⛏️', type:'pickaxe' },
+  { id:'iron_pickaxe',      name:'Iron Pickaxe',      icon:'⛏️', type:'pickaxe' },
+  { id:'golden_pickaxe',    name:'Golden Pickaxe',    icon:'⛏️', type:'pickaxe' },
+  { id:'diamond_pickaxe',   name:'Diamond Pickaxe',   icon:'💎', type:'pickaxe' },
+  { id:'netherite_pickaxe', name:'Netherite Pickaxe', icon:'🔥', type:'pickaxe' },
+  // Shovels
+  { id:'wooden_shovel',    name:'Wooden Shovel',    icon:'🔧', type:'shovel' },
+  { id:'stone_shovel',     name:'Stone Shovel',     icon:'🔧', type:'shovel' },
+  { id:'iron_shovel',      name:'Iron Shovel',      icon:'🔧', type:'shovel' },
+  { id:'diamond_shovel',   name:'Diamond Shovel',   icon:'💎', type:'shovel' },
+  { id:'netherite_shovel', name:'Netherite Shovel', icon:'🔥', type:'shovel' },
+  // Hoes
+  { id:'wooden_hoe',    name:'Wooden Hoe',    icon:'🌾', type:'hoe' },
+  { id:'iron_hoe',      name:'Iron Hoe',      icon:'🌾', type:'hoe' },
+  { id:'diamond_hoe',   name:'Diamond Hoe',   icon:'💎', type:'hoe' },
+  { id:'netherite_hoe', name:'Netherite Hoe', icon:'🔥', type:'hoe' },
+  // Helmets
+  { id:'leather_helmet',    name:'Leather Helmet',    icon:'🪖', type:'helmet' },
+  { id:'chainmail_helmet',  name:'Chainmail Helmet',  icon:'🪖', type:'helmet' },
+  { id:'iron_helmet',       name:'Iron Helmet',       icon:'🪖', type:'helmet' },
+  { id:'golden_helmet',     name:'Golden Helmet',     icon:'🪖', type:'helmet' },
+  { id:'diamond_helmet',    name:'Diamond Helmet',    icon:'💎', type:'helmet' },
+  { id:'netherite_helmet',  name:'Netherite Helmet',  icon:'🔥', type:'helmet' },
+  { id:'turtle_helmet',     name:'Turtle Helmet',     icon:'🐢', type:'helmet', extra:'turtle' },
+  // Chestplates
+  { id:'leather_chestplate',    name:'Leather Chestplate',    icon:'👕', type:'chestplate' },
+  { id:'chainmail_chestplate',  name:'Chainmail Chestplate',  icon:'👕', type:'chestplate' },
+  { id:'iron_chestplate',       name:'Iron Chestplate',       icon:'👕', type:'chestplate' },
+  { id:'golden_chestplate',     name:'Golden Chestplate',     icon:'👕', type:'chestplate' },
+  { id:'diamond_chestplate',    name:'Diamond Chestplate',    icon:'💎', type:'chestplate' },
+  { id:'netherite_chestplate',  name:'Netherite Chestplate',  icon:'🔥', type:'chestplate' },
+  // Leggings
+  { id:'leather_leggings',   name:'Leather Leggings',   icon:'👖', type:'leggings' },
+  { id:'iron_leggings',      name:'Iron Leggings',      icon:'👖', type:'leggings' },
+  { id:'diamond_leggings',   name:'Diamond Leggings',   icon:'💎', type:'leggings' },
+  { id:'netherite_leggings', name:'Netherite Leggings', icon:'🔥', type:'leggings' },
+  // Boots
+  { id:'leather_boots',   name:'Leather Boots',   icon:'👢', type:'boots' },
+  { id:'iron_boots',      name:'Iron Boots',      icon:'👢', type:'boots' },
+  { id:'golden_boots',    name:'Golden Boots',    icon:'👢', type:'boots' },
+  { id:'diamond_boots',   name:'Diamond Boots',   icon:'💎', type:'boots' },
+  { id:'netherite_boots', name:'Netherite Boots', icon:'🔥', type:'boots' },
+  // Ranged
+  { id:'bow',             name:'Bow',             icon:'🏹', type:'bow' },
+  { id:'crossbow',        name:'Crossbow',        icon:'🏹', type:'crossbow' },
+  { id:'trident',         name:'Trident',         icon:'🔱', type:'trident' },
+  // Tools
+  { id:'fishing_rod',     name:'Fishing Rod',     icon:'🎣', type:'fishing_rod' },
+  { id:'shears',          name:'Shears',          icon:'✂️', type:'shears' },
+  { id:'flint_and_steel', name:'Flint and Steel', icon:'🔥', type:'flint' },
+  { id:'carrot_on_a_stick', name:'Carrot on a Stick', icon:'🥕', type:'carrot_stick' },
+  // Special
+  { id:'shield',          name:'Shield',          icon:'🛡️', type:'shield' },
+  { id:'elytra',          name:'Elytra',          icon:'🪽', type:'elytra' },
+  { id:'book',            name:'Book',             icon:'📖', type:'book' },
+];
 
-// Auto-next when track ends
-audio.addEventListener('ended', nextTrack);
+const MC_ENCHANTS = {
+  sword:       [['sharpness',5],['smite',5],['bane_of_arthropods',5],['knockback',2],['fire_aspect',2],['looting',3],['sweeping_edge',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  axe:         [['sharpness',5],['smite',5],['bane_of_arthropods',5],['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  pickaxe:     [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  shovel:      [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1]],
+  hoe:         [['efficiency',5],['silk_touch',1],['fortune',3],['unbreaking',3],['mending',1]],
+  helmet:      [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['respiration',3],['aqua_affinity',1],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
+  chestplate:  [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
+  leggings:    [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['swift_sneak',3],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
+  boots:       [['protection',4],['blast_protection',4],['fire_protection',4],['projectile_protection',4],['feather_falling',4],['depth_strider',3],['frost_walker',2],['soul_speed',3],['thorns',3],['unbreaking',3],['mending',1],['binding_curse',1],['vanishing_curse',1]],
+  bow:         [['power',5],['punch',2],['flame',1],['infinity',1],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  crossbow:    [['quick_charge',3],['multishot',1],['piercing',4],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  trident:     [['loyalty',3],['riptide',3],['channeling',1],['impaling',5],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  fishing_rod: [['luck_of_the_sea',3],['lure',3],['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  shears:      [['efficiency',5],['unbreaking',3],['mending',1]],
+  flint:       [['unbreaking',3],['mending',1]],
+  carrot_stick:[['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  shield:      [['unbreaking',3],['mending',1],['vanishing_curse',1]],
+  elytra:      [['unbreaking',3],['mending',1],['vanishing_curse',1],['binding_curse',1]],
+  book:        [['mending',1],['vanishing_curse',1]],
+  turtle:      [['protection',4],['respiration',3],['aqua_affinity',1],['thorns',3],['unbreaking',3],['mending',1]],
+};
+
+let mcSelected = null, mcChosenEnchants = {};
+
+function mcFilter() {
+  const q = document.getElementById('mc-search').value.toLowerCase();
+  const sug = document.getElementById('mc-suggestions');
+  if (!q) { sug.style.display = 'none'; return; }
+  const matches = MC_ITEMS.filter(i => i.id.includes(q) || i.name.toLowerCase().includes(q)).slice(0, 15);
+  if (!matches.length) { sug.style.display = 'none'; return; }
+  sug.style.display = 'block';
+  sug.innerHTML = matches.map(i =>
+    `<div onclick="mcSelectItem('${i.id}')" style="padding:8px 12px;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:0.82rem;transition:background 0.15s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background=''">
+      <span>${i.icon}</span><span>${i.name}</span><span style="color:var(--muted);font-size:0.7rem;margin-left:auto">${i.id}</span>
+    </div>`
+  ).join('');
+}
+
+function mcSelectItem(id) {
+  mcSelected = MC_ITEMS.find(i => i.id === id);
+  mcChosenEnchants = {};
+  document.getElementById('mc-search').value = mcSelected.name;
+  document.getElementById('mc-suggestions').style.display = 'none';
+  document.getElementById('mc-item-icon').textContent = mcSelected.icon;
+  document.getElementById('mc-item-name').textContent = mcSelected.name;
+  document.getElementById('mc-item-id').textContent = 'minecraft:' + mcSelected.id;
+  document.getElementById('mc-item-selected').style.display = 'block';
+  // Build enchant checkboxes
+  const type = mcSelected.extra || mcSelected.type;
+  const enchants = MC_ENCHANTS[type] || [];
+  const el = document.getElementById('mc-enchants');
+  el.innerHTML = enchants.map(([e, max]) => {
+    const opts = Array.from({length: max}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+    return `<div style="display:flex;align-items:center;gap:5px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:0.75rem">
+      <input type="checkbox" id="ench_${e}" onchange="mcBuild()" style="width:auto;accent-color:var(--accent)">
+      <label for="ench_${e}" style="margin:0;text-transform:none;font-size:0.75rem;letter-spacing:0;cursor:pointer">${e.replace(/_/g,' ')}</label>
+      <select id="lvl_${e}" onchange="mcBuild()" style="width:auto;padding:2px 4px;font-size:0.72rem;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text)">${opts}</select>
+    </div>`;
+  }).join('');
+  
+  const extras = document.getElementById('mc-extras');
+  extras.innerHTML = '';
+  if (['helmet','chestplate','leggings','boots'].includes(mcSelected.type)) {
+    extras.innerHTML = `<div class="field"><label>لون الأرمور (Leather فقط — Hex بدون #)</label><input type="text" id="mc-color" placeholder="مثال: FF5733" oninput="mcBuild()" maxlength="6" style="${!mcSelected.id.startsWith('leather') ? 'opacity:0.3;pointer-events:none' : ''}"></div>`;
+  }
+  mcBuild();
+}
+
+function mcBuild() {
+  if (!mcSelected) return;
+  const count = parseInt(document.getElementById('mc-count').value) || 1;
+  const customName = document.getElementById('mc-custom-name').value.trim();
+  const loreRaw = document.getElementById('mc-lore').value.trim();
+  const type = mcSelected.extra || mcSelected.type;
+  const enchants = MC_ENCHANTS[type] || [];
+
+  let components = [];
+
+  // 1. Enchantments (1.21 Syntax)
+  let enchLevels = [];
+  enchants.forEach(([e]) => {
+    const cb = document.getElementById('ench_' + e);
+    const lv = document.getElementById('lvl_' + e);
+    if (cb && cb.checked) {
+      enchLevels.push(`"minecraft:${e}":${lv.value}`);
+    }
+  });
+  if (enchLevels.length > 0) {
+    components.push(`enchantments={levels:{${enchLevels.join(',')}}}`);
+  }
+
+  // 2. Custom Name (1.21 Syntax)
+  if (customName) {
+    components.push(`custom_name='{"text":"${customName}","italic":false}'`);
+  }
+
+  // 3. Lore (1.21 Syntax)
+  if (loreRaw) {
+    const loreLines = loreRaw.split('\n').map(l => `'{"text":"${l}","italic":false}'`).join(',');
+    components.push(`lore=[${loreLines}]`);
+  }
+
+  // 4. Color (for leather armor) (1.21 Syntax)
+  const colorEl = document.getElementById('mc-color');
+  if (colorEl && colorEl.value.length === 6 && mcSelected.id.startsWith('leather')) {
+    const dec = parseInt(colorEl.value, 16);
+    components.push(`dyed_color=${dec}`);
+  }
+
+  let componentString = components.length > 0 ? `[${components.join(',')}]` : '';
+  const cmd = `/give @p minecraft:${mcSelected.id}${componentString} ${count}`;
+  document.getElementById('mc-cmd').textContent = cmd;
+}
+
+function mcReset() {
+  mcSelected = null; mcChosenEnchants = {};
+  document.getElementById('mc-search').value = '';
+  document.getElementById('mc-item-selected').style.display = 'none';
+  document.getElementById('mc-cmd').textContent = 'اختر آيتم أولاً';
+  document.getElementById('mc-custom-name').value = '';
+  document.getElementById('mc-lore').value = '';
+  document.getElementById('mc-count').value = 1;
+}
 
 /* ═══════════════════════════════════════════════
-   UTILITIES
+   JOJO BIZARRE ADVENTURE WIKI
 ═══════════════════════════════════════════════ */
-function copyText(id, isTextarea = false) {
-  const el = document.getElementById(id);
-  const text = isTextarea ? el.value : el.textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('📋 Copied!'));
+const JOJO_DATA = [
+  {
+    part: 'الجزء الأول: مغامرة فانتوم بلود',
+    year: '1880 — إنجلترا',
+    color: '#8b6914',
+    chars: [
+      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'نبيل ومحترم، يتقن تقنية الـ Hamon، يقاتل ضد ديو لحماية الناس.', img: 'https://static.wikia.nocookie.net/jjba/images/4/4d/Jonathan_Joestar_Infobox.png' },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'طموح لا حدود له، تحوّل إلى مصاص دماء بعد ارتداء القناع الحجري.', img: 'https://static.wikia.nocookie.net/jjba/images/1/13/DIO_Manga_Infobox.png' },
+      { name: 'روبرت إي. أو. سبيدواغن', role: 'رفيق جوناثان', align: 'طيب', desc: 'بدأ لصاً ثم أصبح حليفاً وفياً لجوناثان، مؤسس مؤسسة سبيدواغن.', img: 'https://static.wikia.nocookie.net/jjba/images/2/26/Speedwagon_Infobox.png' },
+      { name: 'ويليام أنتوان زيبيلي', role: 'المرشد', align: 'طيب', desc: 'أستاذ الـ Hamon الذي علّم جوناثان كيف يواجه المصاصين.', img: 'https://static.wikia.nocookie.net/jjba/images/8/86/Zeppeli_Infobox.png' },
+      { name: 'جورج جوستار الأول', role: 'الأب', align: 'طيب', desc: 'والد جوناثان، رجل شريف كريم أنقذ براندو صغيراً دون أن يعلم العواقب.', img: 'https://static.wikia.nocookie.net/jjba/images/f/f3/George_Joestar_I_Infobox.png' },
+      { name: 'إيريا زيبيلي', role: 'البطلة', align: 'طيب', desc: 'عشيقة جوناثان ذات القلب الطيب، تتحلى بالشجاعة في أصعب المواقف.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b4/Erina_Part1_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء الثاني: معركة الاتجاه',
+    year: '1938 — أمريكا/أوروبا',
+    color: '#2e7d32',
+    chars: [
+      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'حفيد جوناثان، ماكر وذكي ومرح، يتفوق على أعدائه بالحيل والـ Hamon.', img: 'https://static.wikia.nocookie.net/jjba/images/c/ca/Joseph_Joestar_Battle_Tendency_Infobox.png' },
+      { name: 'سيزار أنتوني زيبيلي', role: 'الحليف', align: 'طيب', desc: 'حفيد ويليام، مقاتل Hamon إيطالي فخور، يربطه بجوزيف صداقة قوية.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1c/Caesar_Infobox.png' },
+      { name: 'كارز', role: 'زعيم البشر القدماء', align: 'شرير', desc: 'أقوى كائن في الكون بعد تطوره، خالق القناع الحجري الساعي للكمال المطلق.', img: 'https://static.wikia.nocookie.net/jjba/images/8/8a/Kars_Infobox.png' },
+      { name: 'إيسيدسي', role: 'البشر القدماء', align: 'شرير', desc: 'أحد قادة البشر القدماء، يتميز بالقوة والسرعة الخارقة.', img: 'https://static.wikia.nocookie.net/jjba/images/4/44/Esidisi_Infobox.png' },
+      { name: 'واماو', role: 'البشر القدماء', align: 'شرير', desc: 'رابع قادة البشر القدماء، متشرف بمفهوم الشرف ويقاتل بأسلوب مباشر.', img: 'https://static.wikia.nocookie.net/jjba/images/c/c4/Wamuu_Infobox.png' },
+      { name: 'ليزا ليزا', role: 'المرشدة', align: 'طيب', desc: 'معلمة الـ Hamon الغامضة والقوية، يكتنف ماضيها سر كبير.', img: 'https://static.wikia.nocookie.net/jjba/images/1/19/Lisa_Lisa_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء الثالث: مسافرو النجوم',
+    year: '1989 — العالم',
+    color: '#1565c0',
+    chars: [
+      { name: 'جوتارو كوجو', role: 'البطل الرئيسي', align: 'طيب', desc: 'حفيد جوزيف، شخصية باردة قوية، يمتلك ستاند ستار بلاتينيوم.', img: 'https://static.wikia.nocookie.net/jjba/images/8/85/Jotaro_Part3_Infobox.png' },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'عاد بجسد جوناثان بعد مئة عام ويمتلك ستاند THE WORLD لإيقاف الزمن.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1f/Dio_Part3_Infobox.png' },
+      { name: 'محمد أفدول', role: 'الحليف', align: 'طيب', desc: 'مصري حكيم يمتلك ستاند مغناطيس Magician\'s Red القادر على التحكم بالنار.', img: 'https://static.wikia.nocookie.net/jjba/images/3/3f/Avdol_Infobox.png' },
+      { name: 'نوريياكي كاكيوين', role: 'الحليف', align: 'طيب', desc: 'طالب ياباني يمتلك ستاند Hierophant Green ذو القدرات بعيدة المدى.', img: 'https://static.wikia.nocookie.net/jjba/images/1/18/Kakyoin_Infobox.png' },
+      { name: 'جان بيير بولنار', role: 'الحليف', align: 'طيب', desc: 'فرنسي أنيق يمتلك Silver Chariot، فارس شريف يحترم قواعد القتال.', img: 'https://static.wikia.nocookie.net/jjba/images/2/2d/Polnareff_Part3_Infobox.png' },
+      { name: 'إيغي', role: 'الحليف', align: 'محايد', desc: 'كلب يمتلك ستاند The Fool المصنوع من الرمال، مستقل وعنيد لكنه شجاع.', img: 'https://static.wikia.nocookie.net/jjba/images/e/e5/Iggy_Infobox.png' },
+      { name: 'جوزيف جوستار', role: 'الحليف', align: 'طيب', desc: 'جوزيف في شيخوخته، يمتلك ستاند Hermit Purple ويقود المجموعة.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b9/Joseph_Joestar_Stardust_Crusaders_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء الرابع: الملاك الجامح',
+    year: '1999 — موريو، اليابان',
+    color: '#6a1b9a',
+    chars: [
+      { name: 'جوسوكي هيغاشيكاتا', role: 'البطل الرئيسي', align: 'طيب', desc: 'مراهق يمتلك Crazy Diamond القادر على إصلاح الأشياء، يكره من يهين شعره.', img: 'https://static.wikia.nocookie.net/jjba/images/0/04/Josuke_Part4_Infobox.png' },
+      { name: 'يوشيكاجي كيرا', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قاتل متسلسل يمتلك Killer Queen، يعيش حياة هادئة ويبتر أيدي ضحاياه.', img: 'https://static.wikia.nocookie.net/jjba/images/2/28/Kira_Yoshikage_Infobox.png' },
+      { name: 'كوإيتشي هيروسيه', role: 'الحليف', align: 'طيب', desc: 'صديق جوسوكي الوفي، يمتلك Echoes الذي يتطور عبر ثلاثة أوضاع.', img: 'https://static.wikia.nocookie.net/jjba/images/1/1e/Koichi_Infobox.png' },
+      { name: 'أوكياسو أوكوياسو', role: 'الحليف', align: 'طيب', desc: 'يمتلك Sheer Heart Attack، يبحث عن أخته ويصبح حليفاً قيّماً.', img: 'https://static.wikia.nocookie.net/jjba/images/2/2e/Okuyasu_Infobox.png' },
+      { name: 'جوتارو كوجو', role: 'الحليف', align: 'طيب', desc: 'عاد إلى موريو للتحقيق في نشاط الستاندات، يوجّه جوسوكي.', img: 'https://static.wikia.nocookie.net/jjba/images/8/85/Jotaro_Part3_Infobox.png' },
+      { name: 'ريوهي كيشيبي', role: 'المحقق', align: 'محايد', desc: 'محقق يمتلك ستاند Superfly، يلاحق الجرائم الغريبة في موريو.', img: 'https://static.wikia.nocookie.net/jjba/images/c/ca/Kishibe_Rohan_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء الخامس: الذهب الريحي',
+    year: '2001 — إيطاليا',
+    color: '#c62828',
+    chars: [
+      { name: 'جورنو جيوفانا', role: 'البطل الرئيسي', align: 'طيب', desc: 'ابن ديو، يحلم بأن يصبح Gang-Star، يمتلك Gold Experience.', img: 'https://static.wikia.nocookie.net/jjba/images/b/b0/Giorno_Giovanna_Infobox.png' },
+      { name: 'دياڤولو', role: 'الخصم الرئيسي', align: 'شرير', desc: 'قائد العصابة السرية باسيوني ذو شخصية مزدوجة، يمتلك King Crimson.', img: 'https://static.wikia.nocookie.net/jjba/images/8/82/Diavolo_Infobox.png' },
+      { name: 'بروشيولتي', role: 'الحليف', align: 'طيب', desc: 'قائد الفريق الذي يضم جورنو، يمتلك Purple Haze ويتميز بالشجاعة.', img: 'https://static.wikia.nocookie.net/jjba/images/3/35/Bucciarati_Infobox.png' },
+      { name: 'ناراتشيا', role: 'الحليف', align: 'طيب', desc: 'عضو الفريق الأصغر سناً، يمتلك Aerosmith ويعتمد عليه الجميع.', img: 'https://static.wikia.nocookie.net/jjba/images/2/27/Narancia_Infobox.png' },
+      { name: 'أبّاكيو', role: 'الحليف', align: 'طيب', desc: 'يمتلك Moody Blues القادر على إعادة تشغيل أحداث الماضي.', img: 'https://static.wikia.nocookie.net/jjba/images/3/33/Abbacchio_Infobox.png' },
+      { name: 'ميستا', role: 'الحليف', align: 'طيب', desc: 'يمتلك Sex Pistols، ستة كائنات صغيرة تتحكم بمسار رصاصاته.', img: 'https://static.wikia.nocookie.net/jjba/images/4/43/Mista_Infobox.png' },
+      { name: 'تريشا أونا', role: 'ابنة دياڤولو', align: 'محايد', desc: 'في البداية هدف للحماية، لاحقاً تتكشف هويتها وتمتلك Spice Girl.', img: 'https://static.wikia.nocookie.net/jjba/images/6/62/Trish_Una_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء السادس: حجرة الحجر',
+    year: '2011 — فلوريدا، أمريكا',
+    color: '#00838f',
+    chars: [
+      { name: 'جولين كوجو', role: 'البطلة الرئيسية', align: 'طيب', desc: 'ابنة جوتارو كوجو، تدخل السجن بتهمة باطلة وتمتلك Stone Free.', img: 'https://static.wikia.nocookie.net/jjba/images/2/24/Jolyne_Infobox.png' },
+      { name: 'إنريكو بوتشي', role: 'الخصم الرئيسي', align: 'شرير', desc: 'كاهن متعصب يمتلك Whitesnake ويحلم بالوصول إلى الجنة.', img: 'https://static.wikia.nocookie.net/jjba/images/3/3b/Pucci_Infobox.png' },
+      { name: 'هيرميس كوستيلو', role: 'الحليفة', align: 'طيب', desc: 'صديقة جولين في السجن، تمتلك Kiss وتبحث عن ثأر أختها.', img: 'https://static.wikia.nocookie.net/jjba/images/8/82/Hermes_Infobox.png' },
+      { name: 'ويذر ريبورت', role: 'الحليف', align: 'محايد', desc: 'غامض يمتلك Weather Report للتحكم بالطقس، ماضيه مخفي.', img: 'https://static.wikia.nocookie.net/jjba/images/6/6c/Weather_Report_Infobox.png' },
+      { name: 'فو فايترز', role: 'الحليف', align: 'محايد', desc: 'مستعمرة من العوالق تسكن جثة، تنضم لجولين بدافع غريب.', img: 'https://static.wikia.nocookie.net/jjba/images/0/03/F.F._Infobox.png' },
+      { name: 'آنساتو جانيلي', role: 'الحليف', align: 'طيب', desc: 'ناشط سياسي يمتلك Diver Down القادر على الغوص داخل الأجسام.', img: 'https://static.wikia.nocookie.net/jjba/images/0/0b/Annasui_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء السابع: ستيل بول ران',
+    year: '1890 — أمريكا',
+    color: '#4527a0',
+    chars: [
+      { name: 'جوني جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'بطل سابق مشلول الساقين يبحث عن شيء يعيد له سبب العيش.', img: 'https://static.wikia.nocookie.net/jjba/images/b/be/Johnny_Joestar_Infobox.png' },
+      { name: 'جايرو زيبيلي', role: 'الحليف الرئيسي', align: 'محايد', desc: 'مُدان يشارك في السباق آملاً في العفو، يمتلك تقنية الكرة الدوارة.', img: 'https://static.wikia.nocookie.net/jjba/images/4/43/Gyro_Zeppeli_Infobox.png' },
+      { name: 'فالنتاين', role: 'الخصم الرئيسي', align: 'شرير', desc: 'نائب رئيس الولايات المتحدة، يؤمن بمبدأ "الحظ" الوطني ويمتلك Dirty Deeds Done Dirt Cheap.', img: 'https://static.wikia.nocookie.net/jjba/images/3/38/Funny_Valentine_Infobox.png' },
+      { name: 'ديدجا ماكماهون', role: 'المنافس', align: 'محايد', desc: 'منافس شرس في السباق يتبع فالنتاين لاحقاً.', img: 'https://static.wikia.nocookie.net/jjba/images/6/6d/Diego_Brando_Infobox.png' },
+    ]
+  },
+  {
+    part: 'الجزء الثامن: جوجوليون',
+    year: '2011 — موريو، اليابان (بديلة)',
+    color: '#283593',
+    chars: [
+      { name: 'جوسوكي هيغاشيكاتا (جوجو)', role: 'البطل الرئيسي', align: 'طيب', desc: 'شخص مجهول الهوية وجد بجوار جدار الكوارث، يمتلك Soft & Wet.', img: 'https://static.wikia.nocookie.net/jjba/images/a/ac/Josuke_Higashikata_JJL_Infobox.png' },
+      { name: 'توسياكي ياسويو', role: 'الخصم', align: 'شرير', desc: 'أحد أعضاء The Rock Humans، يطارد جوسوكي بلا هوادة.', img: 'https://static.wikia.nocookie.net/jjba/images/9/93/Yoshikage_Kira_JJL_Infobox.png' },
+      { name: 'يامامورو نوريسوكيه', role: 'الحليف', align: 'طيب', desc: 'صديق مقرب يساعد جوسوكي في كشف غموض هويته.', img: 'https://static.wikia.nocookie.net/jjba/images/3/36/Norisuke_IV_Infobox.png' },
+      { name: 'دايمون هاتو', role: 'الحليفة', align: 'طيب', desc: 'فتاة من عائلة هيغاشيكاتا تساعد جوسوكي وتمتلك Walking Heart.', img: 'https://static.wikia.nocookie.net/jjba/images/c/c3/Hato_Infobox.png' },
+    ]
+  },
+];
+
+let jojoPart = 0;
+
+function jojoRender() {
+  const tabs = document.getElementById('jojo-tabs');
+  tabs.innerHTML = JOJO_DATA.map((p, i) =>
+    `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--muted)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;font-size:0.65rem;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em">الجزء ${i+1}</button>`
+  ).join('');
+
+  const part = JOJO_DATA[jojoPart];
+  const grid = document.getElementById('jojo-chars');
+  grid.innerHTML = `<div style="grid-column:1/-1;border-left:3px solid ${part.color};padding-left:12px;margin-bottom:4px">
+    <div style="font-size:0.9rem;font-weight:700;color:${part.color}">${part.part}</div>
+    <div style="font-size:0.72rem;color:var(--muted)">${part.year}</div>
+  </div>` +
+  part.chars.map(c => {
+    const alignColor = c.align === 'طيب' ? 'var(--success)' : c.align === 'شرير' ? 'var(--danger)' : 'var(--warn)';
+    const alignIcon  = c.align === 'طيب' ? '✦' : c.align === 'شرير' ? '✖' : '◆';
+    return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
+      <div style="height:140px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden">
+        <img src="${c.img}" alt="${c.name}" style="height:100%;width:100%;object-fit:cover;object-position:top" onerror="this.style.display='none';this.nextSibling.style.display='flex'" loading="lazy">
+        <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:3rem">🌀</div>
+      </div>
+      <div style="padding:10px">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--text);margin-bottom:2px;direction:rtl">${c.name}</div>
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:6px;direction:rtl">${c.role}</div>
+        <span style="font-size:0.65rem;color:${alignColor};background:${alignColor}22;padding:2px 8px;border-radius:20px">${alignIcon} ${c.align}</span>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:8px;line-height:1.5;direction:rtl">${c.desc}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
-}
+function jojoSetPart(i) { jojoPart = i; jojoRender(); }
+
+// Init JoJo when opened
+const _origToggle = toggle;
+window.toggle = function(id) {
+  _origToggle(id);
+  if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender();
+};
 </script>
 </body>
 </html>
