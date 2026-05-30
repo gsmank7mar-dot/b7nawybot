@@ -2,18 +2,23 @@
 <html lang="ar" dir="rtl">
 <head>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>Sevenawy Cyber</title>
+    <title>Sevenawy Cyber Dashboard</title>
 </head>
-<body class="light-mode">
-    <button onclick="toggleTheme()">تبديل الوضع</button>
-    <h1>SEVENAWY - سفناوي</h1>
-    <div class="services">
-        <h2>خدماتنا السيبرانية</h2>
-        <p>فحص المنافذ، OSINT، وتحليل الروابط.</p>
+<body>
+    <div class="header">
+        <h1>SEVENAWY - سفناوي</h1>
+        <p>البوابة الرقمية الموحدة للعمليات السيبرانية</p>
     </div>
-    <footer>صنع بواسطة B7</footer>
+
+    <div class="card">
+        <h3>🚀 خدماتنا المتاحة</h3>
+        <ul>
+            <li>فحص المنافذ المتقدم</li>
+            <li>تحليل سجلات الـ OSINT</li>
+            <li>التحقق الأمني من الروابط</li>
+        </ul>
+    </div>
+
+    <footer>نظام مطور بواسطة B7 - المساعد السيبراني 2026</footer>
 </body>
-<script>
-    function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-</script>
 </html>
